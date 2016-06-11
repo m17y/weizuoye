@@ -1,0 +1,9 @@
+eclipse.preferences.version=1
+encoding//dao/mongo/AssignmentDao.py=utf-8
+encoding//dao/mongo/BaseMongodb.py=utf-8
+encoding//library/until/Md5Encrypt.py=utf-8
+encoding//test/dao/TestAssignmentDao.py=utf-8
+encoding//view/web/user/UserHandler.py=utf-8
+encoding//view/web/user/url.py=utf-8
+encoding/<project>=UTF-8
+encoding/runserver.py=utf-8
