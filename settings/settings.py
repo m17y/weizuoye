@@ -17,5 +17,6 @@ settings = dict(
             static_path=os.path.join(os.path.abspath("static")),
             xsrf_cookies=True,
             cookie_secret="__TODO:_GENERATE_YOUR_OWN_RANDOM_VALUE_HERE__",
+            login_url = "/",
             debug=True,
         )

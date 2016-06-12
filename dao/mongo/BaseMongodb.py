@@ -9,7 +9,7 @@ import pymongo
 class BaseMongodb():
     def __init__(self):
         print settings.options.mongo
-        conn  = pymongo.Connection(
+        conn  = pymongo.MongoClient(
             host=settings.options.mongo
             )
         self.db = conn.workonline
