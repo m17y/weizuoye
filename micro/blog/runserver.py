@@ -12,7 +12,6 @@ import tornado.ioloop
 from setting import SetApplication as Application
 from setting import options
 def main():
-    import pdb;pdb.set_trace()
     tornado.options.parse_command_line()
     http_server = tornado.httpserver.HTTPServer(Application())
     http_server.listen(options.port)

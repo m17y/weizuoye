@@ -10,4 +10,3 @@ connect('weizuoye', host='127.0.0.1', port=27017)
 
 connect('teacher', alias='db-teacher',host='127.0.0.1', port=27017)
 
-connect('student', host='127.0.0.1', port=27017)

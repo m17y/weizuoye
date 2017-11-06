@@ -23,11 +23,24 @@ class Student(Document):
     email = EmailField(required=False)
     password = StringField(max_length=50)
     classgroup = ReferenceField(ClassGroup, reverse_delete_rule=PULL)
+    def verfiy(self):
+        user = Student.objects(name=self.name).first()
+        import pdb;pdb.set_trace()
+        if user and user.password==self.password:
+            return 1
+        else:
+            return 2
+    @property
+    def usercount(self):
+        user_count = Student.objects(name=self.name).count()
+        return user_count
+
 class Teacher(Document):
     name = StringField(max_length=30)
     email = EmailField(required=False)
     password = StringField(max_length=50)
     meta = {'db_alias': 'db-teacher'}
+
 
 class Subject(Document):
     name = StringField(max_length=20,required=False)
@@ -43,6 +56,7 @@ if __name__ == '__main__':
     st = Student()
     st.name='suyf'
     st.classgroup = cg
+    st.ver
     st.save()
     # st = Student.objects(name='suyf')
     # st.classgroup = cg
