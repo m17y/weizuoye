@@ -4,7 +4,7 @@ Created on 2016年6月11日
 
 @author: Su
 '''
-from mongo.AssignmentDao import AssignmentDao
+from dao.mongo.AssignmentDao import AssignmentDao
 import unittest
 class TestAssignments(unittest.TestCase):
     def test_create_local_auth(self):
