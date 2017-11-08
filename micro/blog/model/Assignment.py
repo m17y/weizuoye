@@ -13,46 +13,72 @@ from BaseMongodb import connect
 class BaseMo(Document):
     update_time = DateTimeField(default=datetime.datetime.utcnow)
     meta = {'allow_inheritance': True}
-class ClassGroup(Document):
-    name = StringField(max_length=30)
-    num = StringField(min_value=5, max_value=20)
-    users = ListField(StringField(max_length=100))
 
-class Student(Document):
+class User(Document):
+    """用户类"""
     name = StringField(max_length=30)
     email = EmailField(required=False)
     password = StringField(max_length=50)
-    classgroup = ReferenceField(ClassGroup, reverse_delete_rule=PULL)
+    class_level=IntField()
+    classid = StringField(max_length=30)
+    is_teacher = BooleanField(default=False)
+    course = ListField()
+    # course = ReferenceField(Course, reverse_delete_rule=PULL)
+    school = StringField(max_length=30)
+    college = StringField(max_length=30)
     def verfiy(self):
-        user = Student.objects(name=self.name).first()
+        user = User.objects(name=self.name).first()
         import pdb;pdb.set_trace()
         if user and user.password==self.password:
-            return 1
+            return True
         else:
-            return 2
+            return False
     @property
     def usercount(self):
-        user_count = Student.objects(name=self.name).count()
+        user_count = User.objects(name=self.name).count()
         return user_count
 
-class Teacher(Document):
+class CourseType(Document):
+    """学科类，按学科分类"""
     name = StringField(max_length=30)
-    email = EmailField(required=False)
-    password = StringField(max_length=50)
-    meta = {'db_alias': 'db-teacher'}
+    code = StringField(max_length=30)
+    college = StringField(max_length=30)
 
+class Course(Document):
+    """课程类"""
+    course_type = StringField(max_length=30)
+    name = StringField(max_length=30)
+    code = StringField(max_length=30)
+    task = ListField()
 
-class Subject(Document):
-    name = StringField(max_length=20,required=False)
-    creat_time = DateTimeField(default=datetime.datetime.utcnow)
-    identifier = StringField(max_length=10,required=False)
+class School(Document):
+    """学校类"""
+    name = StringField(max_length=30)
+    code = StringField(max_length=30)
+
+class CollegeClass(Document):
+    """学院班级类"""
+    name = StringField(max_length=30)
+
+class College(Document):
+    """学院类"""
+    name = StringField(max_length=30)
+    code = StringField(max_length=30)
+    school = ReferenceField(School, reverse_delete_rule=PULL)
+
+class task(Document):
+    """作业类"""
+    courseid = StringField(max_length=20,required=False)
+    taskerid = DateTimeField(default=datetime.datetime.utcnow)
+    userid = StringField(max_length=10,required=False)
+    content = StringField(max_length=10,required=False)
 
 if __name__ == '__main__':
-    cg = ClassGroup()
-    cg.num = '001'
-    cg.name = '软件工程系'
-    cg.save()
-
+    # cg = ClassGroup()
+    # cg.num = '001'
+    # cg.name = '软件工程系'
+    # cg.save()
+    import pdb;pdb.set_trace()
     st = Student()
     st.name='suyf'
     st.classgroup = cg
