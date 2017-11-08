@@ -7,5 +7,4 @@ class Application(tornado.web.Application):
     handlers = [
             (r"/", HomeHandler),
             (r"/login", LoginHandler),
-
         ]

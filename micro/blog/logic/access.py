@@ -17,5 +17,4 @@ acl.add_role("teacher")
 acl.add_resource("article")
 
 acl.allow("admin", "view", "article")
-acl.allow("admin", "edit", "article")
-
+# acl.allow("admin", "edit", "article")

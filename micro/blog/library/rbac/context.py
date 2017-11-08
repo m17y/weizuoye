@@ -46,18 +46,14 @@ class IdentityContext(object):
 
     def __init__(self, acl, roles_loader=None):
         self.acl = acl
-        self.set_roles_loader(roles_loader)
-
+        self.load_roles=[]
     def set_roles_loader(self, role_loader):
         """Set a callable object (such as a function) which could return a
         iteration to provide all roles of current context user.
 
         Example:
-        >>> @context.set_roles_loader
-        ... def load_roles():
-        ...     user = request.context.current_user
-        ...     for role in user.roles:
-        ...         yield role
+        >>> context.set_roles_loader(['role'])
+
         """
         self.load_roles = role_loader
 
@@ -84,12 +80,12 @@ class IdentityContext(object):
         return bool(self.check_permission(*args, **kwargs))
 
     def has_roles(self, role_groups):
-        had_roles = frozenset(self.load_roles())
+        had_roles = frozenset(self.load_roles)
         return any(all(role in had_roles for role in role_group)
                    for role_group in role_groups)
 
     def _docheck(self, operation, resource, **assertion_kwargs):
-        had_roles = self.load_roles()
+        had_roles = self.load_roles
         role_list = list(had_roles)
         assert len(role_list) == len(set(role_list))  # duplicate role check
         return self.acl.is_any_allowed(role_list, operation, resource,
