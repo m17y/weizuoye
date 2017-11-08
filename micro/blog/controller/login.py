@@ -1,11 +1,16 @@
 # -*- coding:utf-8 -*-
 import tornado.web
 from model import Assignment as ag
+from logic.access import *
 
 class BaseHandler(tornado.web.RequestHandler):
-    pass
+    @context.set_roles_loader
+    def first_load_roles():
+        yield "admin"
 
 class LoginHandler(BaseHandler):
+
+    @context.check_permission("view", "article", message="can not view")
     def get(self):
         self.render("login.html")
     def post(self):

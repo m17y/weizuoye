@@ -2,11 +2,24 @@
 
 import tornado.web
 from model import Assignment as ag
+from logic.access import context
+
+
+
 
 class BaseHandler(tornado.web.RequestHandler):
-    pass
 
+    context.set_roles_loader('staff')
+
+
+    def prepare(self):
+        pass
+        # first_load_roles()
 class HomeHandler(BaseHandler):
+
+    @context.check_permission("view", "article", message="can not view")
     def get(self):
-        st = ag.Student()
+        print id(context)
+        import pdb;pdb.set_trace()
+        st = ag.User()
         self.render("home.html")
