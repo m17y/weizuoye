@@ -9,8 +9,9 @@ from logic.access import context
 
 class BaseHandler(tornado.web.RequestHandler):
 
-    context.set_roles_loader('staff')
-
+    @context.set_roles_loader
+    def get(self):
+        yield "staff"
 
     def prepare(self):
         pass

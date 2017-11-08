@@ -110,7 +110,7 @@ class Registry(object):
     def is_any_allowed(self, roles, operation, resource, **assertion_kwargs):
         """Check the permission with many roles."""
         is_allowed = None  # no matching rules
-        for i, role in enumerate([roles]):
+        for i, role in enumerate(roles):
             # if access not yet allowed and all remaining roles could
             # only deny access, short-circuit and return False
             if not is_allowed and self._roles_are_deny_only(roles[i:]):
