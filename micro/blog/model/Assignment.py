@@ -6,17 +6,23 @@ Created on 2016年6月10日
 '''
 import datetime
 from mongoengine import *
-
 from BaseMongodb import connect
 # connect('mydb')
 
 class BaseMo(Document):
     update_time = DateTimeField(default=datetime.datetime.utcnow)
     meta = {'allow_inheritance': True}
+    def modelfactory(self,args):
+        for k ,v in args.items():
+            try:
+                self[k] = v
+            except Exception as e:
+                pass
 
-class User(Document):
+class User(BaseMo):
     """用户类"""
     name = StringField(max_length=30)
+    identity =  IntField(max_length=30)
     email = EmailField(required=False)
     password = StringField(max_length=50)
     class_level=IntField()
@@ -26,13 +32,12 @@ class User(Document):
     # course = ReferenceField(Course, reverse_delete_rule=PULL)
     school = StringField(max_length=30)
     college = StringField(max_length=30)
-    def verfiy(self):
+    def login_verfiy(self):
         user = User.objects(name=self.name).first()
-        import pdb;pdb.set_trace()
         if user and user.password==self.password:
-            return True
+            return True,'successs'
         else:
-            return False
+            return False,'fail'
     @property
     def usercount(self):
         user_count = User.objects(name=self.name).count()
