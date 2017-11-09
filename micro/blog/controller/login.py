@@ -3,9 +3,12 @@ import tornado.web
 from model import Assignment as ag
 from logic.access import *
 from base import BaseHandler,context
+from logic.access import *
 
+
+
+@needcheck()
 class LoginHandler(BaseHandler):
-
     @context.check_permission("edit", "article", message="can not view")
     def get(self):
         self.render("login.html")
