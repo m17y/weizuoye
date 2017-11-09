@@ -1,10 +1,11 @@
 import tornado.web
-from controller.blog import *
-from controller.login import *
 
+from controller import *
 
 class Application(tornado.web.Application):
     handlers = [
             (r"/", HomeHandler),
             (r"/login", LoginHandler),
+            (r"/reg", RegHandler),
+
         ]
