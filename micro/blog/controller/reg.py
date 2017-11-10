@@ -14,9 +14,9 @@ class RegHandler(BaseHandler):
         self.render("login.html")
     def post(self):
         st = ag.User()
-        args = dict((k,v[-1])for k ,v in self.request.arguments.items())
-        args.password  =  hashlib.md5().update(args.get('password','')).hexdigest()
-        st.modelfactory(args)
-        status,msg = st.login_verfiy()
-        self.writer(dict(status=status,msg=msg))
+        kwargs = dict((k,v[-1])for k ,v in self.request.arguments.items())
+        kwargs['password']  =  hashlib.md5(kwargs.get('password','')).hexdigest()
+        st.modelfactory(kwargs)
+        status ,msg = st.unique_save()
+        self.write(dict(status=status,msg=msg))
 

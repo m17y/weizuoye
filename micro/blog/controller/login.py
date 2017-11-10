@@ -17,7 +17,7 @@ class LoginHandler(BaseHandler):
         st = ag.User()
         kwargs = dict((k,v[-1]) for k,v in self.request.arguments.items())
         kwargs['password']  =  hashlib.md5(kwargs.get('password','')).hexdigest()
-
+        print kwargs
         st.modelfactory(kwargs)
         status,msg = st.login_verfiy()
         self.write(dict(status=status,msg=msg))

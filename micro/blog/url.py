@@ -7,5 +7,5 @@ class Application(tornado.web.Application):
             (r"/", HomeHandler),
             (r"/login", LoginHandler),
             (r"/reg", RegHandler),
-
+            (r"/coursetask", CourseTaskAddHandler),
         ]
