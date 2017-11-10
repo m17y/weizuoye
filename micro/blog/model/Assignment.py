@@ -6,18 +6,10 @@ Created on 2016年6月10日
 '''
 import datetime,time
 from mongoengine import *
-from BaseMongodb import connect
+from Base import connect,BaseObject
 # connect('mydb')
 
-class BaseObject(object):
-    update_time = time.time()
-    # meta = {'allow_inheritance': True}
-    def modelfactory(self,args):
-        for k ,v in args.items():
-            try:
-                self[k] = v
-            except Exception as e:
-                pass
+
 
 class User(Document,BaseObject):
     """用户类"""
