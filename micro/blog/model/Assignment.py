@@ -14,7 +14,6 @@ from Base import connect,BaseObject
 class User(Document,BaseObject):
     """用户类"""
     usercount = property(lambda self: self.usercount())
-
     name = StringField(max_length=30)
     identity =  IntField(max_length=30)
     email = EmailField(required=False)
@@ -26,13 +25,6 @@ class User(Document,BaseObject):
     # course = ReferenceField(Course, reverse_delete_rule=PULL)
     school = StringField(max_length=30)
     college = StringField(max_length=30)
-
-    def login_verfiy(self):
-        user = User.objects(name=self.name).first()
-        if user and user.password==self.password:
-            return True,'successs'
-        else:
-            return False,'fail'
 
     def unique_save(self):
         if not self.usercount:
@@ -90,9 +82,9 @@ class CourseTask(Document):
 
 class Task(Document):
     """作业类"""
-    courseid = StringField(max_length=20,required=False)
-    taskerid = DateTimeField(default=datetime.datetime.utcnow)
-    userid = StringField(max_length=10,required=False)
+    course_task = ReferenceField(CourseTask, reverse_delete_rule=CASCADE)
+    taskerid = StringField(max_length=10,required=False)
+    user = ReferenceField(User, reverse_delete_rule=CASCADE)
     content = StringField(max_length=10,required=False)
 
 if __name__ == '__main__':
@@ -124,12 +116,17 @@ if __name__ == '__main__':
     ct.course = cs
     ct.collegeclass = collegc
     ct.owner = user
+    task = Task()
+    task.course_task = ct
+    task.user = user
+    task.taskerid = '000000'
     sc.save()
     user.save()
     cg.save()
     collegc.save()
     cs.save()
     ct.save()
+    task.save()
 
 # 删除依赖
 # User.objects(name="Root").delete()

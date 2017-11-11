@@ -1,10 +1,14 @@
 import tornado
+from bson import ObjectId
 from logic.access import context
 from logic.access import *
+from model.Assignment import *
 
 class BaseHandler(tornado.web.RequestHandler):
     role = property(lambda self: self.get_user_role())
-    is_teacher = property(lambda self: True)
+    uid = property(lambda self: self.get_secure_cookie("uid"))
+    user = property(lambda self: self.get_user())
+
     def set_default_headers(self):
         self.set_header("Access-Control-Allow-Origin", "*")
         self.set_header("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With")
@@ -16,7 +20,9 @@ class BaseHandler(tornado.web.RequestHandler):
         self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
 
 
-
+    def get_user(self):
+        user = User.objects(id=ObjectId(self.uid)).first()
+        return user
     def set_acl_role(self):
         context.set_roles_loader([self.role])
     def prepare(self):
@@ -26,5 +32,3 @@ class BaseHandler(tornado.web.RequestHandler):
             self.send_error(403)
     def get_user_role(self):
         return 'admin'
-    def get_user(self):
-    	print self.role

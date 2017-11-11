@@ -1,7 +1,9 @@
 # -*- coding:utf-8 -*-
 import hashlib
 import tornado.web
-from model import Assignment as ag
+from bson import ObjectId
+
+from model.Assignment import *
 from logic.access import *
 from base import BaseHandler
 from logic.access import *
@@ -38,13 +40,16 @@ class TaskUpdateHandler(BaseHandler):
         Task.objects().modify(taskerid="taskerid",userid=userid,**kwargs)
         self.write(dict(status=True,msg='删除成功'))
 
-
 @needcheck()
 class TaskViewHandler(BaseHandler):
 
     def post(self):
-        if self.is_teacher:
+        print self.user
+        if self.user.is_teacher:
             classid = self.get_argument('classid')
             courseid = self.get_argument('classid')
-
-        if not self.is_teacher:
+        else:
+            course_task = self.get_argument('course_task')
+            import pdb;pdb.set_trace()
+            data = Task.objects(user=ObjectId(self.uid),course_task=ObjectId(course_task))[0:5]
+            self.write(dict(data=data.to_json(),status=True,msg='xxx'))

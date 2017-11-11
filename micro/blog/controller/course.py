@@ -13,8 +13,7 @@ from logic.access import *
 class CourseTaskAddHandler(BaseHandler):
 
     def post(self):
-        if self.is_teacher:
-
+        if self.user['is_teacher']:
             courseid = self.get_argument('courseid')
             classesid = self.get_argument('classesid')
             task = {
