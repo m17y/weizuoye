@@ -42,26 +42,3 @@ class CollegeAddHandler(BaseHandler):
         bm.modelfactory(kwargs)
         status ,msg = bm.save()
         self.write(dict(status=status,msg=msg))
-
-
-@needcheck()
-class CourseAddHandler(BaseHandler):
-
-    def post(self):
-        bm = ag.Course()
-        kwargs = dict((k,v[-1])for k ,v in self.requebm.arguments.items())
-        bm.modelfactory(kwargs)
-        status ,msg = bm.save()
-        self.write(dict(status=status,msg=msg))
-
-
-
-@needcheck()
-class CourseTypeAddHandler(BaseHandler):
-
-    def post(self):
-        bm = ag.CourseType()
-        kwargs = dict((k,v[-1])for k ,v in self.requebm.arguments.items())
-        bm.modelfactory(kwargs)
-        status ,msg = bm.save()
-        self.write(dict(status=status,msg=msg))

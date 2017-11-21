@@ -11,17 +11,12 @@ from logic.access import *
 
 
 @needcheck()
-class TaskAddHandler(BaseHandler):
+class CourseTaskHandler(BaseHandler):
 
     def get(self):
-        print self.user
-        if self.user.is_teacher:
-            classid = self.get_argument('classid')
-            courseid = self.get_argument('classid')
-        else:
-            course_task = self.get_argument('course_task')
-            data = Task.objects(user=ObjectId(self.uid),course_task=ObjectId(course_task))[0:5]
-            self.write(dict(data=data.to_json(),status=True,msg='xxx'))
+        course_task = self.get_argument('course_task')
+        data = Task.objects(user=ObjectId(self.uid),course_task=ObjectId(course_task))[0:5]
+        self.write(dict(data=data.to_json(),status=True,msg='xxx'))
 
     def post(self):
         bm = ag.School()
@@ -41,4 +36,11 @@ class TaskAddHandler(BaseHandler):
         kwargs = dict((k,v[-1])for k ,v in self.request.arguments.items())
         taskerid = kwargs.pop('taskerid','')
         Task.objects().modify(taskerid="taskerid",userid=userid,**kwargs)
-        self.write(dict(status=True,msg='删除成功'))
+        self.write(dict(status=True,msg='modify success'))
+
+@needcheck()
+class ListTaskHndler(object):
+    """docstring for UserTaskHndler"""
+    def get(self):
+        unfinished_task = Task.objects(user=self.uid,is_finish=False)
+        self.write(dict(data=unfinished_task.to_json(),status=True,msg='xxx'))
