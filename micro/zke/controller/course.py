@@ -89,7 +89,6 @@ class CourseTaskHandler(BaseHandler):
             ct.classesid = classesid
             ct.task = [{'title':title,'context':context,'videoid':videoid}]
             ct.save()
-            Page.objects(id='...').update_one(push__authors=john)
         self.write(dict(status=status,msg=msg))
 
 @needcheck()
