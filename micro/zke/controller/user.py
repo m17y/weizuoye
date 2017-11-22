@@ -18,7 +18,7 @@ class UserHandler(BaseHandler):
         self.write(dict(data=data.to_json(),status=True,msg='xxx'))
 
     def post(self):
-        user = ag.User()
+        user = User()
         kwargs = dict((k,v[-1])for k ,v in self.request.arguments.items())
         user.modelfactory(kwargs)
         status ,msg = user.unique_save()

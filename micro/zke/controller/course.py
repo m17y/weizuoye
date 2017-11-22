@@ -92,7 +92,7 @@ class CourseTaskHandler(BaseHandler):
         self.write(dict(status=status,msg=msg))
 
 @needcheck()
-def CrouseUserStatistic(BaseHandler):
-    if self.is_teacher:
+class CrouseUserStatistic(BaseHandler):
+    def post(self):
         pass
         #TODO tongjifenshudeng

@@ -34,7 +34,6 @@ class User(Document,BaseObject):
         else:
             return False,'fail'
 
-    @property
     def usercount(self):
         user_count = User.objects(name=self.name).count()
         return user_count

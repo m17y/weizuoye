@@ -11,7 +11,7 @@ from logic.access import *
 
 
 @needcheck()
-class CourseTaskHandler(BaseHandler):
+class TaskHandler(BaseHandler):
 
     def get(self):
         course_task = self.get_argument('course_task')
@@ -39,7 +39,7 @@ class CourseTaskHandler(BaseHandler):
         self.write(dict(status=True,msg='modify success'))
 
 @needcheck()
-class ListTaskHndler(object):
+class ListTaskHndler(BaseHandler):
     """docstring for UserTaskHndler"""
     def get(self):
         unfinished_task = Task.objects(user=self.uid,is_finish=False)
