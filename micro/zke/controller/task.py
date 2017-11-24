@@ -14,15 +14,21 @@ from logic.access import *
 class TaskHandler(BaseHandler):
 
     def get(self):
-        course_task = self.get_argument('course_task')
-        data = Task.objects(user=ObjectId(self.uid),course_task=ObjectId(course_task))[0:5]
-        self.write(dict(data=data.to_json(),status=True,msg='xxx'))
+        course_task = self.get_argument('coursetaskid')
+        task = Task.objects(user=ObjectId(self.uid),course_task=ObjectId(course_task))[0:5]
+        self.write(dict(task=task.to_json(),status=True,msg='xxx'))
 
     def post(self):
-        bm = ag.School()
-        kwargs = dict((k,v[-1])for k ,v in self.request.arguments.items())
-        bm.modelfactory(kwargs)
-        status ,msg = bm.unique_save()
+        bm = School()
+        course_task = self.get_argument('coursetaskid')
+        content = self.get_argument('content','')
+        fid = self.get_argument('fid','').split(',')
+        task = Task()
+        task.course_task = course_task
+        task.user = self.user
+        task.fid = fid
+        task.save()
+
         self.write(dict(status=status,msg=msg))
 
     def delete(self):

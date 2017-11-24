@@ -35,6 +35,19 @@ class UserHandler(BaseHandler):
         self.write(dict(status=True,msg='update success'))
 
     def delete(self):
-        taskerid = self.get_argument('taskerid')
-        User.objects(taskerid="taskerid",id=self.uid).delete()
+        uid = self.get_argument('uid')
+        User.objects(id=ObjectId(uid)).delete()
         self.write(dict(status=True,msg='删除成功'))
+class RestUserHandler(BaseHandler):
+    def put(self):
+        password =self.get_argument('password','')
+        oldpassword =self.get_argument('oldpassword','')
+        password =  hashlib.md5(kwargs.get('password','')).hexdigest()
+        oldpassword =  hashlib.md5(kwargs.get('oldpassword','')).hexdigest()
+        user = User.objects(id=self.uid,password=password).first()
+        if user:
+            User.objects(id=self.uid).modify(**{'password':oldpassword})
+            status,msg=True,'修改用戶密碼成功'
+        else:
+            status,msg=True,'用戶信息验证失败'
+        self.write(dict(status=status,msg=msg))

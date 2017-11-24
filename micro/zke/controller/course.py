@@ -16,12 +16,12 @@ class CourseHandler(BaseHandler):
         owner = self.get_argument('onwerid','')
         if owner:
             courses=Course.objects(owner=ObjectId(owner))
-            self.write(dict(courses=courses.to_json(),msg='msg'))
+            self.write(dict(courses=courses.to_json()))
             return
         else:
             coursesids = self.user['course']
             courses=Course.objects(id__in=coursesids)
-            self.write(dict(courses=courses.to_json(),msg='msg'))
+            self.write(dict(courses=courses.to_json()))
             return
 
     def post(self):
@@ -54,41 +54,34 @@ class CourseHandler(BaseHandler):
 class CourseTaskHandler(BaseHandler):
 
     def get(self):
-        self.write(dict(status=True,msg='msg'))
+        coursetaskid = self.get_argument('coursetaskid')
+        coursetask=CourseTask.objects(id=ObjectId(coursetaskid)).first()
+        self.write(dict(coursetask=coursetask.to_json()))
 
     def post(self):
         if self.user['is_teacher']:
             courseid = self.get_argument('courseid')
-            classesid = self.get_argument('classesid')
-            task = {
-                'title':self.get_argument('title'),
-                'context':self.get_argument('context'),
-                'videoid':self.get_argument('videoid'),
-                'ts':time.time(),
-                'taskid':ObjectId()
-            }
-            if CourseTask.objects(classesid=classesid).count():
-                CourseTask.objects(courseid=courseid,classesid=classesid).update_one(push__task=task)
-            else:
-                ct = CourseTask()
-                ct.courseid = courseid
-                ct.classesid = classesid
-                ct.task = [task]
-                ct.save()
+            fid = self.get_argument('fid','').split(',')
+            task = self.get_argument('task','')
+            coursetask = CourseTask()
+            coursetask.courseid = courseid
+            coursetask.fid = fid
+            coursetask.task = task
+            coursetask.ts = time.time()
+            coursetask.save()
         self.write(dict(status=True,msg='msg'))
+    def put(self):
+        coursetaskid = self.get_argument('coursetaskid')
+        fid = self.get_argument('fid','').split(',')
+        task = self.get_argument('task','')
+        CourseTask.objects().modify(id=ObjectId(coursetaskid),**{'fid':fid,'task':task})
+        self.write(dict(status=True,msg='modify success'))
 
     def delete(self):
         if self.is_teacher:
             courseid = self.get_argument('courseid')
-            classesid = self.get_argument('classesid')
-            title = self.get_argument('title')
-            context = self.get_argument('context')
-            videoid = self.get_argument('videoid')
-            ct = CourseTask
-            ct.courseid = courseid
-            ct.classesid = classesid
-            ct.task = [{'title':title,'context':context,'videoid':videoid}]
-            ct.save()
+            #TODO删除fid（文件）
+            CourseTask.objects(courseid=ObjectId(courseid)).delete()
         self.write(dict(status=status,msg=msg))
 
 @needcheck()

@@ -69,17 +69,19 @@ class CourseTask(Document):
     course = ReferenceField(Course, reverse_delete_rule=CASCADE)
     owner = ReferenceField(User, reverse_delete_rule=CASCADE)
     tasks = StringField(max_length=30)
-
+    fid = ListField()
+    ts = FloatField()
 class CourseCall(Document):
     course = ReferenceField(Course, reverse_delete_rule=CASCADE)
     ts = FloatField()
-    users = ListField(ReferenceField(User,reverse_delete_rule=PULL))
+    users = ListField(ReferenceField(User,reverse_delete_rule=PUL))
 
 class Task(Document):
     """作业类"""
     course_task = ReferenceField(CourseTask, reverse_delete_rule=CASCADE)
     user = ReferenceField(User, reverse_delete_rule=CASCADE)
     content = StringField(max_length=10,required=False)
+    fid = ListField()
     is_finish = BooleanField(default=False)
 
 if __name__ == '__main__':

@@ -14,13 +14,11 @@ class LoginHandler(BaseHandler):
     def get(self):
         self.render("login.html")
     def post(self):
-        st = User()
-        kwargs = dict((k,v[-1]) for k,v in self.request.arguments.items())
-        kwargs['password']  =  hashlib.md5(kwargs.get('password','')).hexdigest()
-        print kwargs
-        st.modelfactory(kwargs)
-        user = User.objects(name=st.name).first()
-        if user and user.password==st.password:
+        name = self.get_argument('name')
+        password = self.get_argument('password')
+        kwargs['password']  =  hashlib.md5(password).hexdigest()
+        user = User.objects(name=name,password=password).first()
+        if user:
             self.set_secure_cookie("uid",str(user.id))
             status,msg = True,'successs'
         else:

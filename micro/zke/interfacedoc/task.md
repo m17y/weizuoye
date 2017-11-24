@@ -1,0 +1,51 @@
+# 习题
+
+#获得用户习题
+method:get
+paths:/task
+consumes:application/json
+request:{
+    coursetaskid:'coursetaskid'(必填)
+}
+return：{
+    task:{},
+}
+#用户提交习题答案
+method:post
+paths:/task
+consumes:application/json
+request:{
+    coursetaskid:'coursetaskid'(必填),
+    content:'xxxx',
+    fid='xxxx,xxxx'(文件id),
+}
+return：{
+    status:True(False),
+    msg:''
+}
+
+#删除用户课程
+method:delete
+paths:/course
+consumes:application/json
+request:{
+    courseid:'xxx'(课程id)(必填),
+}
+return：{
+    status:True(False),
+    msg:''
+}
+
+#更新用户课程
+method:put
+paths:/course
+consumes:application/json
+request:{
+    coursetaskid:'coursetaskid'(必填),
+    content:'xxxx',
+    fid='xxxx,xxxx'(文件id),
+}
+return：{
+    status:True(False),
+    msg:''
+}

@@ -1,0 +1,63 @@
+# 用户
+
+#获得登陆用户自己的信息
+method:get
+paths:/user
+consumes:application/json
+request:{}
+return：{
+    data:{},
+    status:True(False),
+    msg:''
+}
+
+#添加用户
+method:post
+paths:/user
+consumes:application/json
+request:{
+    nickname:'suyf',
+    name:'苏亚飞',
+    email:'1007@qq.com',
+    password:'xxxx',
+}
+return：{
+    status:True(False),
+    msg:''
+}
+#修改用户信息
+method:put
+paths:/user
+consumes:application/json
+request:{
+    nickname:'suyf',
+    email:'1007@qq.com',
+}
+return：{
+    status:True(False),
+    msg:''
+}
+#删除用户
+method:post
+paths:/user
+consumes:application/json
+request:{
+    uid:'xxxx'(必填)
+}
+return：{
+    status:True(False),
+    msg:''
+}
+
+#修改用户密码
+method:put
+paths:/user
+consumes:application/json
+request:{
+    oldpassword:'xxx'(必填),
+    password:'xxxx'(必填),
+}
+return：{
+    status:True(False),
+    msg:''
+}
