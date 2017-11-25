@@ -2,7 +2,7 @@
 
 #获得课程习题
 method:get
-paths:/course
+paths:/course/task
 consumes:application/json
 request:{
     coursetaskid:'coursetaskid'(必填)
@@ -12,7 +12,7 @@ return：{
 }
 #添加课程习题
 method:post
-paths:/coursetask
+paths:/course/task
 consumes:application/json
 request:{
     courseid:'xxx',(必填)
@@ -25,7 +25,7 @@ return：{
 }
 #更新课程习题
 method:put
-paths:/course
+paths:/course/task
 consumes:application/json
 request:{
     coursetaskid:'coursetaskid'(必填),
@@ -38,7 +38,7 @@ return：{
 }
 #删除课程习题
 method:delete
-paths:/coursetask
+paths:/course/task
 consumes:application/json
 request:{
     courseid:'xxx'(课程id)(必填),

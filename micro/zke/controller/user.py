@@ -38,7 +38,7 @@ class UserHandler(BaseHandler):
         uid = self.get_argument('uid')
         User.objects(id=ObjectId(uid)).delete()
         self.write(dict(status=True,msg='删除成功'))
-class RestUserHandler(BaseHandler):
+class ResetUserHandler(BaseHandler):
     def put(self):
         password =self.get_argument('password','')
         oldpassword =self.get_argument('oldpassword','')

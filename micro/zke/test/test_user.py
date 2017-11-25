@@ -4,7 +4,7 @@ import urllib
 import urllib2
 import unittest
 import cookielib
-
+from testbase import*
 HOST = 'http://localhost:9878'
 
 class TestReg(unittest.TestCase):
@@ -68,13 +68,8 @@ class TestReg(unittest.TestCase):
     def test_get_users(self):
         print 'BeginTest:test_get_users.....'
         URL = HOST+'/users'
-        cookie = cookielib.MozillaCookieJar()
-        #从文件中读取cookie内容到变量
-        cookie.load('cookie.txt', ignore_discard=True, ignore_expires=True)
-        opener = urllib2.build_opener()
-        opener.addheaders.append(('Cookie','cookiename=cookievalue'))
+        opener = get_cookie_opener('cookie.txt')
         req = urllib2.Request(url = URL)
-        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
         response = opener.open(req)
         data = json.loads(response.read())
         print data['data']
@@ -88,38 +83,11 @@ class TestReg(unittest.TestCase):
             'password':'111111'
         }
         values = urllib.urlencode(values)
-
-        cookie = cookielib.MozillaCookieJar()
-        #从文件中读取cookie内容到变量
-        cookie.load('cookie.txt', ignore_discard=True, ignore_expires=True)
-        opener = urllib2.build_opener()
-        opener.addheaders.append(('Cookie','cookiename=cookievalue'))
+        opener = get_cookie_opener('cookie.txt')
         req = urllib2.Request(url = URL,data=values)
-        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
         response = opener.open(req)
         data = json.loads(response.read())
         self.assertEquals(data.get('status',''),True)
 
-    def test_post_users(self):
-        print 'BeginTest:test_get_users.....'
-        URL = HOST+'/users'
-        values={
-            'name':'suyf',
-            'password':'111111'
-        }
-        values = urllib.urlencode(values)
-
-        cookie = cookielib.MozillaCookieJar()
-        #从文件中读取cookie内容到变量
-        cookie.load('cookie.txt', ignore_discard=True, ignore_expires=True)
-        opener = urllib2.build_opener()
-        opener.addheaders.append(('Cookie','cookiename=cookievalue'))
-        req = urllib2.Request(url = URL,data=values)
-        request.get_method = lambda: 'PUT'
-
-        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
-        response = opener.open(req)
-        data = json.loads(response.read())
-        self.assertEquals(data.get('status',''),True)
 if __name__ == '__main__':  
     unittest.main()

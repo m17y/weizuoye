@@ -4,9 +4,16 @@ from controller import *
 
 class Application(tornado.web.Application):
     handlers = [
-            (r"/", HomeHandler),
-            (r"/login", LoginHandler),
-            (r"/reg", RegHandler),
-            (r"/viewtask",TaskHandler),
-            (r"/users",UserHandler),
+            (r"/login",LoginHandler),
+            (r"/reg",UserHandler),
+
+            (r"/user",UserHandler),
+            (r"/user/reset",ResetUserHandler),
+
+            (r"/course",CourseHandler),
+            (r"/course/task",CourseTaskHandler),
+            (r"/course/user",CrouseUser),
+
+            (r"/task",TaskHandler),
+            (r"/task/unfinished",TaskUnfinishedHndler),
         ]
