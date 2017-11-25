@@ -74,7 +74,7 @@ class CourseTask(Document):
 class CourseCall(Document):
     course = ReferenceField(Course, reverse_delete_rule=CASCADE)
     ts = FloatField()
-    users = ListField(ReferenceField(User,reverse_delete_rule=PUL))
+    users = ListField(ReferenceField(User,reverse_delete_rule=PULL))
 
 class Task(Document):
     """作业类"""
