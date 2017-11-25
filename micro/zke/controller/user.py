@@ -28,12 +28,13 @@ class UserHandler(BaseHandler):
 
     def put(self):
         #修改用户信息
-        userid = self.uid
-        email = self.get_argument('nickname','')
-        password =self.get_argument('nickname','')
-        kwargs={'email':email}
-        if password:
-            kwargs['password'] = password
+        email = self.get_argument('email','')
+        nickname = self.get_argument('nickname','')
+        kwargs={}
+        if email:
+            kwargs['email'] = email
+        if email:
+            kwargs['nickname'] = nickname
         User.objects().modify(taskerid="taskerid",id=self.uid,**kwargs)
         self.write(dict(status=True,msg='update success'))
 
