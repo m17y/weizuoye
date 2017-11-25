@@ -14,10 +14,12 @@ from logic.access import *
 class UserHandler(BaseHandler):
 
     def get(self):
+        #获得登陆用户自己的信息
         data = User.objects(id=ObjectId(self.uid))
         self.write(dict(data=data.to_json(),status=True,msg='xxx'))
 
     def post(self):
+        #添加用户
         user = User()
         kwargs = dict((k,v[-1])for k ,v in self.request.arguments.items())
         user.modelfactory(kwargs)
@@ -25,6 +27,7 @@ class UserHandler(BaseHandler):
         self.write(dict(status=status,msg=msg))
 
     def put(self):
+        #修改用户信息
         userid = self.uid
         email = self.get_argument('nickname','')
         password =self.get_argument('nickname','')
@@ -35,11 +38,14 @@ class UserHandler(BaseHandler):
         self.write(dict(status=True,msg='update success'))
 
     def delete(self):
+        #删除用户
         uid = self.get_argument('uid')
         User.objects(id=ObjectId(uid)).delete()
         self.write(dict(status=True,msg='删除成功'))
+
 class ResetUserHandler(BaseHandler):
     def put(self):
+        #修改用户密码
         password =self.get_argument('password','')
         oldpassword =self.get_argument('oldpassword','')
         password =  hashlib.md5(kwargs.get('password','')).hexdigest()

@@ -13,6 +13,7 @@ class RegHandler(BaseHandler):
     def get(self):
         self.render("login.html")
     def post(self):
+        #用户注册
         st = ag.User()
         kwargs = dict((k,v[-1])for k ,v in self.request.arguments.items())
         kwargs['password']  =  hashlib.md5(kwargs.get('password','')).hexdigest()

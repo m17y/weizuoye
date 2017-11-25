@@ -45,3 +45,15 @@ return：{
     status:True(False),
     msg:''
 }
+
+#获取课程所以的用户
+method:put
+paths:/course/user
+consumes:application/json
+request:{
+    courseid:'xxx'(课程id)(必填),
+}
+return：{
+    status:True(False),
+    msg:''
+}

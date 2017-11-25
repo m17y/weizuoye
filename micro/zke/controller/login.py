@@ -14,6 +14,7 @@ class LoginHandler(BaseHandler):
     def get(self):
         self.render("login.html")
     def post(self):
+        #用户登陆
         name = self.get_argument('name')
         password = self.get_argument('password')
         kwargs['password']  =  hashlib.md5(password).hexdigest()

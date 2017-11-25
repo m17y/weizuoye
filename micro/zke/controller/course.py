@@ -13,6 +13,7 @@ class CourseHandler(BaseHandler):
     """docstring for CourseHandler"""
 
     def get(self):
+        #获得用户课程信息
         owner = self.get_argument('onwerid','')
         if owner:
             courses=Course.objects(owner=ObjectId(owner))
@@ -25,12 +26,14 @@ class CourseHandler(BaseHandler):
             return
 
     def post(self):
+        #添加用户课程
         code = self.get_argument('code')
         course = Course.objects(id=ObjectId(self.uid)).first()
         User.objects(id=ObjectId(self.uid)).update_one(push__course=course)
         self.write(dict(status=True,msg='msg'))
 
     def delete(self):
+        #删除用户课程
         courseid = self.get_argument('courseid')
         if self.is_teacher:
             Course.objects(owner=ObjectId(self.uid),id=ObjectId(courseid)).delete()
@@ -41,6 +44,7 @@ class CourseHandler(BaseHandler):
             self.write(dict(status=status,msg='del success'));return
 
     def put(self):
+        #更新用户课程
         userid = self.uid
         course = Course()
         kwargs = dict((k,v[-1])for k ,v in self.request.arguments.items())
@@ -54,11 +58,13 @@ class CourseHandler(BaseHandler):
 class CourseTaskHandler(BaseHandler):
 
     def get(self):
+        #获得课程习题
         coursetaskid = self.get_argument('coursetaskid')
         coursetask=CourseTask.objects(id=ObjectId(coursetaskid)).first()
         self.write(dict(coursetask=coursetask.to_json()))
 
     def post(self):
+        #添加课程习题
         if self.user['is_teacher']:
             courseid = self.get_argument('courseid')
             fid = self.get_argument('fid','').split(',')
@@ -71,6 +77,7 @@ class CourseTaskHandler(BaseHandler):
             coursetask.save()
         self.write(dict(status=True,msg='msg'))
     def put(self):
+        #更新课程习题
         coursetaskid = self.get_argument('coursetaskid')
         fid = self.get_argument('fid','').split(',')
         task = self.get_argument('task','')
@@ -78,6 +85,7 @@ class CourseTaskHandler(BaseHandler):
         self.write(dict(status=True,msg='modify success'))
 
     def delete(self):
+        #删除课程习题
         if self.is_teacher:
             courseid = self.get_argument('courseid')
             #TODO删除fid（文件）
@@ -87,5 +95,6 @@ class CourseTaskHandler(BaseHandler):
 @needcheck()
 class CrouseUser(BaseHandler):
     def post(self):
-        pass
+        #获取课程所以的用户
+        courseid = self.get_argument('courseid')
         #TODO tongjifenshudeng
