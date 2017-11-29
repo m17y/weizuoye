@@ -7,7 +7,7 @@ from model.Assignment import *
 from logic.access import *
 from base import BaseHandler
 from logic.access import *
-
+from task.task_server import *
 @needcheck()
 class CourseHandler(BaseHandler):
     """docstring for CourseHandler"""
@@ -75,7 +75,12 @@ class CourseTaskHandler(BaseHandler):
             coursetask.task = task
             coursetask.ts = time.time()
             coursetask.save()
-        self.write(dict(status=True,msg='msg'))
+            course = Course.objects(id=ObjectId(courseid)).first()
+            result = send_course_task.apply_async(args=[course.users,coursetask])
+            if result = 'SUCCESS':
+                self.write(dict(status=True,msg='msg'));return
+            else:
+                self.write(dict(status=True,msg='msg'));return
     def put(self):
         #更新课程习题
         coursetaskid = self.get_argument('coursetaskid')
