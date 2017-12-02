@@ -4,6 +4,7 @@ import time
 from celery import Task
 from init_celery import celery
 import redis
+from logic.jgsend import *
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 class BaseTask(Task):
@@ -22,9 +23,18 @@ def sendmail(mail,b):
     print(b)
 
 @celery.task()
-def send_course_task(users,cousertask):
-    for u in users
-    print (users,cousertask)
+def send_course_task(from_user,users,cousertask):
+    r.publish(cousertask.courseid, cousertask)
+    jgsend()#TODO
+    for u in users:
+        message = Message()
+        message.course_task = course_task
+        message.course = ObjecyId(cousertask.courseid)
+        message.from_user = from_user
+        message.user = ObjecyId(u)
+        message.content = course.name+','+cousertask.content
+        message.save()
+
 # a = send_course_task.apply_async(args=[{'to':2},'2'])
 
 #发布端的代码

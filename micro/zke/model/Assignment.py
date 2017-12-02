@@ -68,21 +68,35 @@ class CourseTask(Document):
     """课程习题类"""
     course = ReferenceField(Course, reverse_delete_rule=CASCADE)
     owner = ReferenceField(User, reverse_delete_rule=CASCADE)
-    tasks = StringField(max_length=30)
+    content = StringField(max_length=30)
     fid = ListField()
     ts = FloatField()
-class CourseCall(Document):
+
+class SignIn(Document):
+    """签到"""
     course = ReferenceField(Course, reverse_delete_rule=CASCADE)
     ts = FloatField()
+    wifi_ssid = StringField(max_length=10,required=False)
     users = ListField(ReferenceField(User,reverse_delete_rule=PULL))
+    is_close = BooleanField(default=False)
 
 class Task(Document):
     """作业类"""
     course_task = ReferenceField(CourseTask, reverse_delete_rule=CASCADE)
+    course = ReferenceField(Course, reverse_delete_rule=CASCADE)
     user = ReferenceField(User, reverse_delete_rule=CASCADE)
     content = StringField(max_length=10,required=False)
     fid = ListField()
     is_finish = BooleanField(default=False)
+
+class Message(Document):
+    """消息类"""
+    course_task = ReferenceField(CourseTask, reverse_delete_rule=CASCADE)
+    course = ReferenceField(Course, reverse_delete_rule=CASCADE)
+    form_user = ReferenceField(User, reverse_delete_rule=CASCADE)
+    user = ReferenceField(User, reverse_delete_rule=CASCADE)
+    content = StringField(max_length=10,required=False)
+    is_read = BooleanField(default=False)
 
 if __name__ == '__main__':
     # 初始化

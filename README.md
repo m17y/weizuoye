@@ -2,6 +2,8 @@ mongod --dbpath /root/mongo/db
 redis-server
 celery -A task_server worker --loglevel=info
 redis-cli
+
+kwargs = dict((k,v[-1])for k ,v in self.request.arguments.items())
 ＃　参考网址
 #TODO 莘莘学子（名字？是否改名）
 # TODO 课程帮，同学或者老师之间课程有偿帮助

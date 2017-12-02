@@ -50,7 +50,7 @@ class TaskHandler(BaseHandler):
 
 @needcheck()
 class TaskUnfinishedHndler(BaseHandler):
-    """docstring for UserTaskHndler"""
+    """获得用户作业完成统计信息"""
     def get(self):
         #标记习题是否完成
         unfinished_task = Task.objects(user=self.uid,is_finish=False)

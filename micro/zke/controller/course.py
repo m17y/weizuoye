@@ -68,15 +68,15 @@ class CourseTaskHandler(BaseHandler):
         if self.user['is_teacher']:
             courseid = self.get_argument('courseid')
             fid = self.get_argument('fid','').split(',')
-            task = self.get_argument('task','')
+            content = self.get_argument('content','')
+            course = Course.objects(id=ObjectId(courseid)).first()
             coursetask = CourseTask()
-            coursetask.courseid = courseid
+            coursetask.course = course
             coursetask.fid = fid
-            coursetask.task = task
+            coursetask.content = content
             coursetask.ts = time.time()
             coursetask.save()
-            course = Course.objects(id=ObjectId(courseid)).first()
-            result = send_course_task.apply_async(args=[course.users,coursetask])
+            result = send_course_task.apply_async(args=[self.user,course.users,coursetask])
             if result = 'SUCCESS':
                 self.write(dict(status=True,msg='msg'));return
             else:
