@@ -16,4 +16,6 @@ class Application(tornado.web.Application):
 
             (r"/task",TaskHandler),
             (r"/task/unfinished",TaskUnfinishedHndler),
+            (r"/course/signin",SignInHandler),
+            
         ]

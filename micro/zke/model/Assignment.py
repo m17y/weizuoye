@@ -76,7 +76,7 @@ class SignIn(Document):
     """签到"""
     course = ReferenceField(Course, reverse_delete_rule=CASCADE)
     ts = FloatField()
-    wifi_ssid = StringField(max_length=10,required=False)
+    signkey = StringField(max_length=10,required=False)
     users = ListField(ReferenceField(User,reverse_delete_rule=PULL))
     is_close = BooleanField(default=False)
 
@@ -100,7 +100,6 @@ class Message(Document):
 
 if __name__ == '__main__':
     # 初始化
-    import pdb;pdb.set_trace()
     user = User()
     user.name='Root'
     sc =School()
