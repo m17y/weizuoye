@@ -7,6 +7,7 @@ Created on 2016年6月10日
 import datetime,time
 from mongoengine import *
 from Base import connect,BaseObject
+
 # connect('mydb')
 
 class Course(Document):

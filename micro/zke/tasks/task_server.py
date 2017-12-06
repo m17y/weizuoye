@@ -4,7 +4,10 @@ import time
 from celery import Task
 from init_celery import celery
 import redis
+import sys
+sys.path.append("../")
 from logic.jgsend import *
+
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 class BaseTask(Task):
