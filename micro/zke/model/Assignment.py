@@ -10,7 +10,7 @@ from Base import connect,BaseObject
 
 # connect('mydb')
 
-class Course(Document):
+class Course(Document,BaseObject):
     """课程类"""
     course_type = StringField(max_length=30)
     name = StringField(max_length=30)
@@ -39,13 +39,13 @@ class User(Document,BaseObject):
         user_count = User.objects(name=self.name).count()
         return user_count
 
-class School(Document):
+class School(Document,BaseObject):
     """学校类"""
     name = StringField(max_length=30)
     code = StringField(max_length=30)
     description = StringField()
 
-class College(Document):
+class College(Document,BaseObject):
     """学院类"""
     name = StringField(max_length=30)
     code = StringField(max_length=30)
@@ -57,7 +57,7 @@ class College(Document):
 #     owner = ReferenceField(User, reverse_delete_rule=CASCADE)
 #     users = ListField(ReferenceField(User,reverse_delete_rule=PULL))
 
-class Course(Document):
+class Course(Document,BaseObject):
     """课程类"""
     course_type = StringField(max_length=30)
     name = StringField(max_length=30)
@@ -65,7 +65,7 @@ class Course(Document):
     owner = ReferenceField(User, reverse_delete_rule=CASCADE)
     users = ListField(ReferenceField(User,reverse_delete_rule=PULL))
 
-class CourseTask(Document):
+class CourseTask(Document,BaseObject):
     """课程习题类"""
     course = ReferenceField(Course, reverse_delete_rule=CASCADE)
     owner = ReferenceField(User, reverse_delete_rule=CASCADE)
@@ -73,7 +73,7 @@ class CourseTask(Document):
     fid = ListField()
     ts = FloatField()
 
-class SignIn(Document):
+class SignIn(Document,BaseObject):
     """签到"""
     course = ReferenceField(Course, reverse_delete_rule=CASCADE)
     ts = FloatField()
@@ -81,7 +81,7 @@ class SignIn(Document):
     users = ListField(ReferenceField(User,reverse_delete_rule=PULL))
     is_close = BooleanField(default=False)
 
-class Task(Document):
+class Task(Document,BaseObject):
     """作业类"""
     course_task = ReferenceField(CourseTask, reverse_delete_rule=CASCADE)
     course = ReferenceField(Course, reverse_delete_rule=CASCADE)
@@ -90,7 +90,7 @@ class Task(Document):
     fid = ListField()
     is_finish = BooleanField(default=False)
 
-class Message(Document):
+class Message(Document,BaseObject):
     """消息类"""
     course_task = ReferenceField(CourseTask, reverse_delete_rule=CASCADE)
     course = ReferenceField(Course, reverse_delete_rule=CASCADE)

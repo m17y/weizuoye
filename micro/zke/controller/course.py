@@ -14,7 +14,7 @@ class CourseHandler(BaseHandler):
 
     def get(self):
         #获得用户课程信息
-        owner = self.get_argument('onwerid','')
+        owner = self.get_argument('_id','')
         if owner:
             courses=Course.objects(owner=ObjectId(owner))
             self.write(dict(courses=courses.to_json()))
@@ -26,22 +26,21 @@ class CourseHandler(BaseHandler):
             return
 
     def post(self):
-        #添加用户课程
-        code = self.get_argument('code')
-        course = Course.objects(id=ObjectId(self.uid)).first()
-        User.objects(id=ObjectId(self.uid)).update_one(push__course=course)
-        self.write(dict(status=True,msg='msg'))
-
-    def delete(self):
-        #删除用户课程
-        courseid = self.get_argument('courseid')
-        if self.is_teacher:
-            Course.objects(owner=ObjectId(self.uid),id=ObjectId(courseid)).delete()
-            self.write(dict(status=status,msg='del success'));return
+        #添加用户课程(或者加入一个课程)
+        code = self.get_argument('code','')
+        if code:
+            User.objects(code=code)).update_one(push__course=ObjectId(courseid))
         else:
-            course = Course.objects(id=ObjectId(courseid)).first()
-            Course.objects(courseid=courseid,classesid=classesid).update_one(pull__course=course)
-            self.write(dict(status=status,msg='del success'));return
+            code = self.get_argument('code')
+            name = self.get_argument('name')
+            course_type = self.get_argument('course_type')
+            course = Course()
+            course.owner = self.user
+            course.name = name
+            course.course_type = course_type
+            course.save()
+            # User.objects(id=ObjectId(self.uid)).update_one(push__course=course.id)
+        self.write(dict(status=True,msg='msg',course=str(course.id)))
 
     def put(self):
         #更新用户课程
@@ -50,8 +49,21 @@ class CourseHandler(BaseHandler):
         kwargs = dict((k,v[-1])for k ,v in self.request.arguments.items())
         _id = kwargs.pop('_id','')
         course.modelfactory(kwargs)
-        Course.objects().modify(id=ObjectId(_id),**kwargs)
+        # Course.objects(id=ObjectId(_id)).modify(**kwargs)#两个都可以
+        Course.objects(id=ObjectId(_id)).update_one(**kwargs)
         self.write(dict(status=True,msg='modify success'))
+
+    def delete(self):
+        #删除用户课程
+        #TODO未完成
+        courseid = self.get_argument('_id')
+        course=Course.objects(id=ObjectId(courseid)).first()
+        if course.owner==self.user:
+            Course.objects(id=ObjectId(courseid)).delete()
+            self.write(dict(status=True,msg='del success'));return
+        else:
+            User.objects(id=self.id).update_one(pull__course=course)
+            self.write(dict(status=True,msg='del success'));return
 
 
 @needcheck()

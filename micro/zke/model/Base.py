@@ -21,3 +21,6 @@ class BaseObject(object):
                 self[k] = v
             except Exception as e:
                 pass
+
+# class BaseDocument(Document,BaseObject):
+#     meta = {'allow_inheritance': True}

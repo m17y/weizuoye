@@ -10,7 +10,7 @@ request:{
 return：{
     courses:{},
 }
-#添加用户课程
+#添加用户课程或者创建一个课程
 method:post
 paths:/course
 consumes:application/json

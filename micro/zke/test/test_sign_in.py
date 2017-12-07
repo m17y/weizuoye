@@ -26,12 +26,7 @@ class TestSignIn(unittest.TestCase):
             'courseid':'5a27ff69b4d0131d3bb8deac',
             'signkey':SSID,
         }
-        values = urllib.urlencode(values)
-        opener = get_cookie_opener('cookie.txt')
-        req = urllib2.Request(url = URL,data=values)
-        req.get_method = lambda: 'POST'
-        response = opener.open(req)
-        data = json.loads(response.read())
+        data = get_requese_data(values,URL,'POST')
         global SIGNIN
         SIGNIN = data.get('sign_in')
         print SIGNIN
@@ -45,13 +40,7 @@ class TestSignIn(unittest.TestCase):
             'signkey':SSID,
         }
         print SIGNIN
-
-        values = urllib.urlencode(values)
-        opener = get_cookie_opener('cookie.txt')
-        req = urllib2.Request(url = URL,data=values)
-        req.get_method = lambda: 'POST'
-        response = opener.open(req)
-        data = json.loads(response.read())
+        data = get_requese_data(values,URL,'POST')
         self.assertEquals(data.get('status',''),True)
 
     def test_put_signin(self):
@@ -61,12 +50,7 @@ class TestSignIn(unittest.TestCase):
             '_id':SIGNIN,
             'signkey':SSID,
         }
-        values = urllib.urlencode(values)
-        opener = get_cookie_opener('cookie.txt')
-        req = urllib2.Request(url = URL,data=values)
-        req.get_method = lambda: 'PUT'
-        response = opener.open(req)
-        data = json.loads(response.read())
+        data = get_requese_data(values,URL,'PUT')
         self.assertEquals(data.get('status',''),True)
 
     def test_del_signin(self):
@@ -75,12 +59,7 @@ class TestSignIn(unittest.TestCase):
         values={
             '_id':SIGNIN,
         }
-        values = urllib.urlencode(values)
-        opener = get_cookie_opener('cookie.txt')
-        req = urllib2.Request(url = URL,data=values)
-        req.get_method = lambda: 'DELETE'
-        response = opener.open(req)
-        data = json.loads(response.read())
+        data = get_requese_data(values,URL,'DELETE')
         self.assertEquals(data.get('status',''),True)
 
 if __name__ == '__main__': 
@@ -92,5 +71,5 @@ if __name__ == '__main__':
     suite.addTest(TestSignIn('test_del_signin'))  
     
   
-    #suite =  unittest.TestLoader().loadTestsFromTestCase(MyTest)  
+    # suite =  unittest.TestLoader().loadTestsFromTestCase(TestSignIn)  
     unittest.TextTestRunner(verbosity=2).run(suite)  

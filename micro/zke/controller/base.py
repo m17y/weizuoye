@@ -9,6 +9,8 @@ class BaseHandler(tornado.web.RequestHandler):
     uid = property(lambda self: self.get_secure_cookie("uid"))
     user = property(lambda self: self.get_user())
     user_cuorse = property(lambda self: self.get_user_cuorse())
+    is_teacher = property(lambda self: self.get_user_cuorse())
+    
     def set_default_headers(self):
         self.set_header("Access-Control-Allow-Origin", "*")
         self.set_header("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With")
