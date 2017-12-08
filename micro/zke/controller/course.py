@@ -30,7 +30,7 @@ class CourseHandler(BaseHandler):
         ###TODO课程关联以及是否需要在用户表（course）和课程表（user）中都插入课程id或（用户id）
         code = self.get_argument('code','')
         if code:
-            User.objects(code=code)).update_one(push__course=ObjectId(courseid))
+            User.objects(code=code).update_one(push__course=ObjectId(courseid))
         else:
             code = self.get_argument('code')
             name = self.get_argument('name')

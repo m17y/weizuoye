@@ -6,7 +6,7 @@ from init_celery import celery
 import redis
 import sys
 sys.path.append("../")
-from logic.jgsend import *
+from logic import jgsend
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
@@ -28,7 +28,7 @@ def sendmail(mail,b):
 @celery.task()
 def send_course_task(from_user,users,cousertask):
     r.publish(cousertask.courseid, cousertask)
-    jgsend()#TODO
+    jgsend.audience(registration_id=users)
     for u in users:
         message = Message()
         message.course_task = course_task
