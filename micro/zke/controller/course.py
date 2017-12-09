@@ -12,35 +12,31 @@ from tasks.task_server import *
 class CourseHandler(BaseHandler):
     """docstring for CourseHandler"""
 
-    def get(self):
+    def get(self,profile_name):
         #获得用户课程信息
-        owner = self.get_argument('_id','')
-        if owner:
-            courses=Course.objects(owner=ObjectId(owner))
+        user = User.objects(profile_name=profile_name).first()
+        tag = self.get_argument('tag','')
+        if tag == 'ain':
+            courses=Course.objects(owner=ObjectId(user.id))
             self.write(dict(courses=courses.to_json()))
             return
-        else:
-            coursesids = self.user['course']
+        if tag== 'follower':
+            coursesids = user.course
             courses=Course.objects(id__in=coursesids)
             self.write(dict(courses=courses.to_json()))
             return
 
     def post(self):
-        #添加用户课程(或者加入一个课程)
-        ###TODO课程关联以及是否需要在用户表（course）和课程表（user）中都插入课程id或（用户id）
-        code = self.get_argument('code','')
-        if code:
-            User.objects(code=code).update_one(push__course=ObjectId(courseid))
-        else:
-            code = self.get_argument('code')
-            name = self.get_argument('name')
-            course_type = self.get_argument('course_type')
-            course = Course()
-            course.owner = self.user
-            course.name = name
-            course.course_type = course_type
-            course.save()
-            # User.objects(id=ObjectId(self.uid)).update_one(push__course=course.id)
+        #添加一个课程
+        code = self.get_argument('code')
+        name = self.get_argument('name')
+        course_type = self.get_argument('course_type')
+        course = Course()
+        course.owner = self.user
+        course.name = name
+        course.course_type = course_type
+        course.save()
+        User.objects(id=self.uid).update_one(push__owncourse=course)
         self.write(dict(status=True,msg='msg',course=str(course.id)))
 
     def put(self):
@@ -59,13 +55,21 @@ class CourseHandler(BaseHandler):
         #TODO未完成
         courseid = self.get_argument('_id')
         course=Course.objects(id=ObjectId(courseid)).first()
-        if course.owner==self.user:
-            Course.objects(id=ObjectId(courseid)).delete()
-            self.write(dict(status=True,msg='del success'));return
-        else:
-            User.objects(id=self.id).update_one(pull__course=course)
-            self.write(dict(status=True,msg='del success'));return
+        Course.objects(id=ObjectId(courseid)).delete()
+        self.write(dict(status=True,msg='del success'));return
 
+
+class CourseJoinHandler(BaseHandler):
+    def post(self):
+        code = self.get_argument('code')
+        User.objects(code=code).update_one(push__course=ObjectId(courseid))
+        self.write(dict(status=True,msg='msg',course=str(course.id)))
+
+class CourseAppear(object):
+    def post(self):
+        courseid = self.get_argument('_id')
+        User.objects(id=self.id).update_one(pull__course=course)
+        self.write(dict(status=True,msg='del success'));return
 
 @needcheck()
 class CourseTaskHandler(BaseHandler):
@@ -113,6 +117,18 @@ class CourseTaskHandler(BaseHandler):
 @needcheck()
 class CrouseUser(BaseHandler):
     def post(self):
-        #获取课程所以的用户
+        #获取课程所有的用户
         courseid = self.get_argument('courseid')
-        #TODO tongjifenshudeng
+        course = Course.objects(id=ObjectId(courseid)).first()
+        users = course.user
+        self.write(dict(users=users.to_json(),status=True))
+
+@needcheck()
+class CrouseUserTask(BaseHandler):
+    def post(self):
+        #获取课程所有用户的作业完成情况
+        courseid = self.get_argument('courseid')
+        course = Course.objects(id=ObjectId(courseid)).first()
+        users = course.user
+        Task.objects(is)
+        self.write(dict(users=users.to_json(),status=True))

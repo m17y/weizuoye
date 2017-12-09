@@ -3,26 +3,29 @@
 #获得用户课程信息
 method:get
 paths:/course
-consumes:application/json
+consumes:application/json/{{profile_name}}
 request:{
-    ownerid:'xxx'(必填),
+    tag:'ain'(获取这个用户自己的)or'follower'（获取这个用户加入别人的）
 }
 return：{
     courses:{},
 }
-#添加用户课程或者创建一个课程
+#添加一个课程
 method:post
 paths:/course
 consumes:application/json
 request:{
-    code:'xxx'(课程code)(必填),
+    code:'xxx'(课程code),
+    name：''（课程名称）,
+    course_type:''(课程类型)
 }
+
 return：{
     status:True(False),
     msg:''
 }
 
-#删除用户课程
+#删除课程
 method:delete
 paths:/course
 consumes:application/json
@@ -34,7 +37,7 @@ return：{
     msg:''
 }
 
-#更新用户课程
+#更新课程
 method:put
 paths:/course
 consumes:application/json
@@ -45,8 +48,31 @@ return：{
     status:True(False),
     msg:''
 }
+#加入一个课程
+method:post
+paths:/course/join
+consumes:application/json
+request:{
+    code:'xxx',
+}
+return：{
+    status:True(False),
+    msg:''
+}
 
-#获取课程所以的用户
+#推出一个课程
+method:post
+paths:/course/appear
+consumes:application/json
+request:{
+    courseid:'xxx',
+}
+return：{
+    status:True(False),
+    msg:''
+}
+
+#获取课程所有的用户
 method:put
 paths:/course/user
 consumes:application/json

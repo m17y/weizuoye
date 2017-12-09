@@ -20,14 +20,14 @@ class Course(Document,BaseObject):
 class User(Document,BaseObject):
     """用户类"""
     count = property(lambda self: self.usercount())
-
+    profile_name = StringField(max_length=30)
     nickname = StringField(max_length=30)
     name = StringField(max_length=30)
     email = EmailField(required=False)
     password = StringField(max_length=50)
     is_teacher = BooleanField(default=False)
     course = ListField(ReferenceField(Course,reverse_delete_rule=PULL))
-
+    owncourse = ListField(ReferenceField(Course,reverse_delete_rule=PULL))
     def unique_save(self):
         if not self.count:
             self.save()
@@ -70,8 +70,10 @@ class CourseTask(Document,BaseObject):
     course = ReferenceField(Course, reverse_delete_rule=CASCADE)
     owner = ReferenceField(User, reverse_delete_rule=CASCADE)
     content = StringField(max_length=30)
+    finish_user = ListField(ReferenceField(User,reverse_delete_rule=PULL))
     fid = ListField()
     ts = FloatField()
+
 
 class SignIn(Document,BaseObject):
     """签到"""
