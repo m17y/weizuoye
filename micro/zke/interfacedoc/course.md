@@ -60,7 +60,7 @@ return：{
     msg:''
 }
 
-#推出一个课程
+#退出一个课程
 method:post
 paths:/course/appear
 consumes:application/json

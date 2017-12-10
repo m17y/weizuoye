@@ -7,7 +7,7 @@ import cookielib
 from testbase import*
 HOST = 'http://localhost:9878'
 
-UID = '5a27ff69b4d0131d3bb8deaa'
+UID = '5a2cf9edb4d0132829cf9a32'
 COURSEID = ''
 
 class TestCourse(unittest.TestCase):
@@ -18,8 +18,13 @@ class TestCourse(unittest.TestCase):
     """
     def test_1_get_course(self):
         print '获得用户课程'
-        
-        pass
+        URL = HOST+'/course'
+        values={
+            'profile_name':'success',
+            'tag':'ain',
+        }
+        data = get_requese_data(values,URL,'GET')
+        COURSEID = data.get('courses')
 
     def test_2_creat_course(self):
         print '创建课程'

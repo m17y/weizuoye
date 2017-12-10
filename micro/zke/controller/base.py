@@ -38,10 +38,10 @@ class BaseHandler(tornado.web.RequestHandler):
     def set_acl_role(self):
         context.set_roles_loader([self.role])
 
-    def prepare(self):
-        try:
-            check_access(self,paccess.keys())
-        except:
-            self.send_error(403)
+    # def prepare(self):
+    #     try:
+    #         check_access(self,paccess.keys())
+    #     except:
+    #         self.send_error(403)
     def get_user_role(self):
         return 'admin'

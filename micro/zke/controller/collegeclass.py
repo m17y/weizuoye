@@ -38,12 +38,10 @@ class CollegeClassUserHandler(BaseHandler):
     def delete(self):
         collegec_lass = self.get_argument('collegec_lass')
         userid = self.get_argument('userid')
-        User.objects(id=ObjectId(collegec_lass)).update_one(pull__users=userid)
         self.write(dict(status=True,msg='删除成功'))
 
     def post(self):
         collegec_lass = self.get_argument('collegec_lass')
         userid = self.get_argument('userid')
-        User.objects(id=ObjectId(collegec_lass)).update_one(push__users=userid)
         self.write(dict(status=status,msg=msg))
 

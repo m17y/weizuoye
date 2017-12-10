@@ -10,6 +10,7 @@ class Application(tornado.web.Application):
             (r"/user",UserHandler),
             (r"/user/reset",ResetUserHandler),
 
+            # (r"/course/(?P<profile_name>\S*)",CourseHandler),
             (r"/course",CourseHandler),
             (r"/course/task",CourseTaskHandler),
             (r"/course/user",CrouseUser),
