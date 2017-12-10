@@ -3,8 +3,9 @@
 #获得用户课程信息
 method:get
 paths:/course
-consumes:application/json/{{profile_name}}
+consumes:application/json/
 request:{
+    profile_name:''(用户档案名称,必写)
     tag:'ain'(获取这个用户自己的)or'follower'（获取这个用户加入别人的）
 }
 return：{
