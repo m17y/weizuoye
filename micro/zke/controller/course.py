@@ -88,13 +88,13 @@ class CourseAppear(object):
 class CourseTaskHandler(BaseHandler):
 
     def get(self):
-        #获得课程习题
+        #根据课程习题id获得课程习题详细内容
         coursetaskid = self.get_argument('coursetaskid')
         coursetask=CourseTask.objects(id=ObjectId(coursetaskid)).first()
         self.write(dict(coursetask=coursetask.to_json()))
 
     def post(self):
-        #添加课程习题
+        #添加一个课程习题
         if self.user['is_teacher']:
             courseid = self.get_argument('courseid')
             fid = self.get_argument('fid','').split(',')
@@ -129,12 +129,12 @@ class CourseTaskHandler(BaseHandler):
 
 @needcheck()
 class CrouseUser(BaseHandler):
-    def post(self):
+    def get(self):
         #获取课程所有的用户
         courseid = self.get_argument('courseid')
         course = Course.objects(id=ObjectId(courseid)).first()
-        users = course.user
-        self.write(dict(users=users.to_json(),status=True))
+        users = [json.loads(u.to_json()) for u in course.users]
+        self.write(dict(users = users))
 
 @needcheck()
 class CrouseTaskStatus(BaseHandler):
