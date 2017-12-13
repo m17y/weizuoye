@@ -44,6 +44,7 @@ paths:/course
 consumes:application/json
 request:{
     name:'xxx',
+    course_type:'xxx'
 }
 return：{
     status:True(False),

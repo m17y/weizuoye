@@ -13,6 +13,7 @@ class Application(tornado.web.Application):
             # (r"/course/(?P<profile_name>\S*)",CourseHandler),
             (r"/course",CourseHandler),
             (r"/course/task",CourseTaskHandler),
+            (r"/course/task/status",CrouseTaskStatus),
             (r"/course/user",CrouseUser),
 
             (r"/task",TaskHandler),

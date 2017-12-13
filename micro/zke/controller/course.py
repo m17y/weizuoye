@@ -138,11 +138,19 @@ class CrouseUser(BaseHandler):
 
 @needcheck()
 class CrouseTaskStatus(BaseHandler):
-    def post(self,courseid):
-        #获取课程所有用户的作业完成情况
+    def get(self):
+        import pdb; pdb.set_trace()
+        #获取单个课程习题（or所有课程习题）的CrouseTaskStatus作业完成情况
+        courseid = self.get_argument('courseid','')
         course_taskid = self.get_argument('course_taskid','')
-        if not course_taskid:
+        if courseid and not course_taskid:
             course = Course.objects(id=ObjectId(courseid)).first()
-            users = course.user
+            users = course.users
+            coursetask = json.loads(CourseTask.objects(course=ObjectId(courseid)).to_json)
+            # coursetask = 
+            #TODO把未完成的放到coursetask里面，完成的把用户名字id放到里面
             self.write(dict(users=users.to_json(),status=True))
+        if course_taskid:
+            #单个课程和多个一样
+            pass
 

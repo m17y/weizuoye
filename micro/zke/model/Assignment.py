@@ -15,6 +15,7 @@ class User(Document,BaseObject):
     """用户类"""
     count = property(lambda self: self.usercount())
     profile_name = StringField(max_length=30,unique=True)
+    tel = IntField(max_length=11, min_length=11)
     nickname = StringField(max_length=30)
     name = StringField(max_length=30)
     email = EmailField(required=False)
@@ -37,7 +38,7 @@ class Course(Document,BaseObject):
     """课程类"""
     course_type = StringField(max_length=30)
     name = StringField(max_length=30)
-    code = StringField(max_length=30)
+    code = StringField(max_length=30,unique=True)
     owner = ObjectIdField()
     users = ListField(ReferenceField(User,reverse_delete_rule=PULL))
 

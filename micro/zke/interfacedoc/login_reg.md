@@ -18,10 +18,13 @@ method:post
 paths:/reg
 consumes:application/json
 request:{
-    nickname:'suyf',
+    nickname:'suyf'(account必填),
+    tel：''
     name:'苏亚飞',
     email:'1007@qq.com',
     password:'xxxx',
+    profile_name:'profile_name'(必填)
+    
 }
 return：{
     status:True(False),
