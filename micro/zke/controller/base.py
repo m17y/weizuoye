@@ -1,3 +1,4 @@
+#-*- coding:utf-8 -*-
 import tornado
 from bson import ObjectId
 from logic.access import context
@@ -38,10 +39,15 @@ class BaseHandler(tornado.web.RequestHandler):
     def set_acl_role(self):
         context.set_roles_loader([self.role])
 
-    # def prepare(self):
-    #     try:
-    #         check_access(self,paccess.keys())
-    #     except:
-    #         self.send_error(403)
+    def prepare(self):
+        try:
+            check_access(self,paccess.keys())
+        except:
+            self.send_error(403)
+        if self.current_user:
+            self.write(dict(status=True,msg='登录成功'))
+        else:
+            self.render('login.html')
+            
     def get_user_role(self):
         return 'admin'

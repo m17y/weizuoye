@@ -5,7 +5,7 @@ from controller import *
 class Application(tornado.web.Application):
     handlers = [
             (r"/login",LoginHandler),
-            (r"/reg",UserHandler),
+            (r"/reg",RegHandler),
 
             (r"/user",UserHandler),
             (r"/user/reset",ResetUserHandler),

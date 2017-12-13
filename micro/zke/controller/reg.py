@@ -7,11 +7,9 @@ from base import BaseHandler
 from logic.access import *
 
 
-
-@needcheck()
-class RegHandler(BaseHandler):
+class RegHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("login.html")
+        self.render("reg.html")
     def post(self):
         #用户注册
         st = ag.User()

@@ -9,15 +9,15 @@ from logic.access import *
 
 
 
-@needcheck()
-class LoginHandler(BaseHandler):
+# @needcheck()
+class LoginHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("login.html")
     def post(self):
         #用户登陆
         name = self.get_argument('name')
         password = self.get_argument('password')
-        kwargs['password']  =  hashlib.md5(password).hexdigest()
+        password  =  hashlib.md5(password).hexdigest()
         user = User.objects(name=name,password=password).first()
         if user:
             self.set_secure_cookie("uid",str(user.id))
