@@ -4,6 +4,13 @@ celery -A task_server worker --loglevel=info
 redis-cli
 
 kwargs = dict((k,v[-1])for k ,v in self.request.arguments.items())
+
+#supervisor
+#重新启动进程之前必须运行此命令
+unlink /tmp/supervisor.sock
+#启动supervisor进程
+supervisord -c /etc/supervisor/supervisord.conf 
+supervisorctl -> start weizuoye 启动程序
 ＃　参考网址
 #TODO 莘莘学子（名字？是否改名）
 # TODO 课程帮，同学或者老师之间课程有偿帮助

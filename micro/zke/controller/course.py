@@ -11,7 +11,6 @@ from tasks.task_server import *
 @needcheck()
 class CourseHandler(BaseHandler):
     """docstring for CourseHandler"""
-
     def get(self):
         #获得用户课程信息
         owner = self.get_argument('_id','')
@@ -21,7 +20,7 @@ class CourseHandler(BaseHandler):
             return
         else:
             coursesids = self.user['course']
-            courses=Course.objects(id__in=coursesids)
+            courses = Course.objects(id__in=coursesids)
             self.write(dict(courses=courses.to_json()))
             return
 
