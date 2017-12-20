@@ -1,3 +1,4 @@
+#-*- coding:utf-8 -*-
 import tornado
 from bson import ObjectId
 from logic.access import context
@@ -43,5 +44,8 @@ class BaseHandler(tornado.web.RequestHandler):
             check_access(self,paccess.keys())
         except:
             self.send_error(403)
+        if not self.get_secure_cookie("uid",None):
+            self.render('login.html')
+            
     def get_user_role(self):
         return 'admin'

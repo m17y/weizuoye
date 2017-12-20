@@ -4,30 +4,25 @@ Created on 2016年6月10日
 
 @author: Su
 '''
+from bson import ObjectId
 import datetime,time
 from mongoengine import *
 from Base import connect,BaseObject
 
 # connect('mydb')
 
-class Course(Document,BaseObject):
-    """课程类"""
-    course_type = StringField(max_length=30)
-    name = StringField(max_length=30)
-    code = StringField(max_length=30)
-
-
 class User(Document,BaseObject):
     """用户类"""
     count = property(lambda self: self.usercount())
-
+    profile_name = StringField(max_length=30,unique=True)
+    tel = IntField(max_length=11, min_length=11)
     nickname = StringField(max_length=30)
     name = StringField(max_length=30)
     email = EmailField(required=False)
     password = StringField(max_length=50)
     is_teacher = BooleanField(default=False)
-    course = ListField(ReferenceField(Course,reverse_delete_rule=PULL))
-
+    # course = ListField(ReferenceField(Course,reverse_delete_rule=PULL))
+    # owncourse = ListField(ReferenceField(Course,reverse_delete_rule=PULL))
     def unique_save(self):
         if not self.count:
             self.save()
@@ -38,6 +33,15 @@ class User(Document,BaseObject):
     def usercount(self):
         user_count = User.objects(name=self.name).count()
         return user_count
+
+class Course(Document,BaseObject):
+    """课程类"""
+    course_type = StringField(max_length=30)
+    name = StringField(max_length=30)
+    code = StringField(max_length=30,unique=True)
+    owner = ObjectIdField()
+    users = ListField(ReferenceField(User,reverse_delete_rule=PULL))
+
 
 class School(Document,BaseObject):
     """学校类"""
@@ -57,21 +61,17 @@ class College(Document,BaseObject):
 #     owner = ReferenceField(User, reverse_delete_rule=CASCADE)
 #     users = ListField(ReferenceField(User,reverse_delete_rule=PULL))
 
-class Course(Document,BaseObject):
-    """课程类"""
-    course_type = StringField(max_length=30)
-    name = StringField(max_length=30)
-    code = StringField(max_length=30)
-    owner = ReferenceField(User, reverse_delete_rule=CASCADE)
-    users = ListField(ReferenceField(User,reverse_delete_rule=PULL))
 
 class CourseTask(Document,BaseObject):
     """课程习题类"""
     course = ReferenceField(Course, reverse_delete_rule=CASCADE)
     owner = ReferenceField(User, reverse_delete_rule=CASCADE)
     content = StringField(max_length=30)
+    finish_user = ListField(ReferenceField(User,reverse_delete_rule=PULL))
+    is_close = BooleanField(default=False)
     fid = ListField()
     ts = FloatField()
+
 
 class SignIn(Document,BaseObject):
     """签到"""
@@ -103,6 +103,9 @@ if __name__ == '__main__':
     # 初始化
     user = User()
     user.name='Root'
+    user.profile_name = 'success'
+    user.save()
+
     sc =School()
     sc.name='河南大学'
     sc.code='Henu'
@@ -117,7 +120,9 @@ if __name__ == '__main__':
     cs.course_type = '高等数学'
     cs.name = '高等数学'
     cs.code = 'math'
-    cs.owner = user
+    cs.users = [user]
+    cs.owner = user.id
+
     ct = CourseTask()
     ct.course = cs
     ct.owner = user
@@ -125,12 +130,14 @@ if __name__ == '__main__':
     task.course_task = ct
     task.user = user
     task.content = '000000'
-    sc.save()
-    user.save()
-    cg.save()
     cs.save()
+    sc.save()
+    cg.save()
     ct.save()
     task.save()
-
+    import pdb; pdb.set_trace()
+    from bson import ObjectId
+    coursesids = [ObjectId('5a2cd4dcb4d013121bb1e24a'),ObjectId("5a2cd433b4d013115b6ccebe")]
+    coursetask=CourseTask.objects(course__in=coursesids).distinct('finish_user')
 # 删除依赖
 # User.objects(name="Root").delete()
