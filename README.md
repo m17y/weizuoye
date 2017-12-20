@@ -11,6 +11,24 @@ unlink /tmp/supervisor.sock
 #启动supervisor进程
 supervisord -c /etc/supervisor/supervisord.conf 
 supervisorctl -> start weizuoye 启动程序
+#nginx 配置
+查看nginx.conf里面有这样一句：    include /etc/nginx/conf.d/*.conf;
+说明nginx引用的是conf.d下的.conf文件
+则可以在conf.d下配置反向代理文件
+```
+    server {
+        listen 610;
+        server_name wiki.suyafei.com;
+
+        location / {
+            proxy_set_header   X-Real-IP $remote_addr;
+            proxy_set_header   Host      $http_host;
+            proxy_pass         http://127.0.0.1:9878;
+        }
+    }
+    #此处以后可以添加详细配置，现在只是做简单的配置文件
+```
+
 ＃　参考网址
 #TODO 莘莘学子（名字？是否改名）
 # TODO 课程帮，同学或者老师之间课程有偿帮助
