@@ -3,13 +3,13 @@ import hashlib
 import tornado.web
 from model import Assignment as ag
 from logic.access import *
-from base import BaseHandler
+from base import AccessHandler
 from logic.access import *
 
 
 
 @needcheck()
-class SchoolAddHandler(BaseHandler):
+class SchoolAddHandler(AccessHandler):
 
     def post(self):
         bm = ag.School()
@@ -19,12 +19,12 @@ class SchoolAddHandler(BaseHandler):
         self.write(dict(status=status,msg=msg))
 
 @needcheck()
-class SchoolDelHandler(BaseHandler):
+class SchoolDelHandler(AccessHandler):
     def post(self):
         pass
 
 @needcheck()
-class CollegeClassAddHandler(BaseHandler):
+class CollegeClassAddHandler(AccessHandler):
 
     def post(self):
         bm = ag.CollegeClass()
@@ -34,7 +34,7 @@ class CollegeClassAddHandler(BaseHandler):
         self.write(dict(status=status,msg=msg))
 
 @needcheck()
-class CollegeAddHandler(BaseHandler):
+class CollegeAddHandler(AccessHandler):
 
     def post(self):
         bm = ag.College()

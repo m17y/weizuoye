@@ -6,17 +6,17 @@ from bson import ObjectId
 import tornado.web
 from model.Assignment import *
 from logic.access import *
-from base import BaseHandler
+from base import AccessHandler
 from logic.access import *
 from tasks.task_server import *
 # @needcheck()
-class CourseHandler(BaseHandler):
+class CourseHandler(AccessHandler):
     """docstring for CourseHandler"""
     def get(self):
         #获得用户课程信息
-        profile_name = self.get_argument('profile_name')
+        profile_name = self.get_json_argument('profile_name')
         user = User.objects(profile_name=profile_name).first()
-        tag = self.get_argument('tag','')
+        tag = self.get_json_argument('tag','')
         if tag == 'ain':
             courses=Course.objects(owner=user.id).all()
             coursetask=CourseTask.objects(course__in=courses,is_close=False)
@@ -37,9 +37,9 @@ class CourseHandler(BaseHandler):
 
     def post(self):
         #添加一个课程
-        code = self.get_argument('code')
-        name = self.get_argument('name')
-        course_type = self.get_argument('course_type')
+        code = self.get_json_argument('code')
+        name = self.get_json_argument('name')
+        course_type = self.get_json_argument('course_type')
         course = Course()
         course.owner = self.user
         course.name = name
@@ -62,41 +62,41 @@ class CourseHandler(BaseHandler):
     def delete(self):
         #删除用户课程
         #TODO未完成
-        courseid = self.get_argument('_id')
+        courseid = self.get_json_argument('_id')
         course=Course.objects(id=ObjectId(courseid)).first()
         Course.objects(id=ObjectId(courseid)).delete()
         self.write(dict(status=True,msg='del success'));return
 
 
-class CourseJoinHandler(BaseHandler):
+class CourseJoinHandler(AccessHandler):
     #加入一个课程
     def post(self):
-        code = self.get_argument('code')
+        code = self.get_json_argument('code')
         Course.objects(code=code).update_one(push__users=self.user)
         self.write(dict(status=True,msg='msg',course=str(course.id)))
 
 class CourseAppear(object):
     #退出一个课程
     def post(self):
-        courseid = self.get_argument('_id')
+        courseid = self.get_json_argument('_id')
         Course.objects(id=self.id).update_one(pull__users=self.user)
         self.write(dict(status=True,msg='del success'));return
 
 @needcheck()
-class CourseTaskHandler(BaseHandler):
+class CourseTaskHandler(AccessHandler):
 
     def get(self):
         #根据课程习题id获得课程习题详细内容
-        coursetaskid = self.get_argument('coursetaskid')
+        coursetaskid = self.get_json_argument('coursetaskid')
         coursetask=CourseTask.objects(id=ObjectId(coursetaskid)).first()
         self.write(dict(coursetask=coursetask.to_json()))
 
     def post(self):
         #添加一个课程习题
         if self.user['is_teacher']:
-            courseid = self.get_argument('courseid')
-            fid = self.get_argument('fid','').split(',')
-            content = self.get_argument('content','')
+            courseid = self.get_json_argument('courseid')
+            fid = self.get_json_argument('fid','').split(',')
+            content = self.get_json_argument('content','')
             course = Course.objects(id=ObjectId(courseid)).first()
             coursetask = CourseTask()
             coursetask.course = course
@@ -111,36 +111,36 @@ class CourseTaskHandler(BaseHandler):
                 self.write(dict(status=True,msg='msg'));return
     def put(self):
         #更新课程习题
-        coursetaskid = self.get_argument('coursetaskid')
-        fid = self.get_argument('fid','').split(',')
-        task = self.get_argument('task','')
+        coursetaskid = self.get_json_argument('coursetaskid')
+        fid = self.get_json_argument('fid','').split(',')
+        task = self.get_json_argument('task','')
         CourseTask.objects().modify(id=ObjectId(coursetaskid),**{'fid':fid,'task':task})
         self.write(dict(status=True,msg='modify success'))
 
     def delete(self):
         #删除课程习题
         if self.is_teacher:
-            courseid = self.get_argument('courseid')
+            courseid = self.get_json_argument('courseid')
             #TODO删除fid（文件）
             CourseTask.objects(courseid=ObjectId(courseid)).delete()
         self.write(dict(status=status,msg=msg))
 
 @needcheck()
-class CrouseUser(BaseHandler):
+class CrouseUser(AccessHandler):
     def get(self):
         #获取课程所有的用户
-        courseid = self.get_argument('courseid')
+        courseid = self.get_json_argument('courseid')
         course = Course.objects(id=ObjectId(courseid)).first()
         users = [json.loads(u.to_json()) for u in course.users]
         self.write(dict(users = users))
 
 @needcheck()
-class CrouseTaskStatus(BaseHandler):
+class CrouseTaskStatus(AccessHandler):
     def get(self):
         import pdb; pdb.set_trace()
         #获取单个课程习题（or所有课程习题）的CrouseTaskStatus作业完成情况
-        courseid = self.get_argument('courseid','')
-        course_taskid = self.get_argument('course_taskid','')
+        courseid = self.get_json_argument('courseid','')
+        course_taskid = self.get_json_argument('course_taskid','')
         if courseid and not course_taskid:
             course = Course.objects(id=ObjectId(courseid)).first()
             users = course.users

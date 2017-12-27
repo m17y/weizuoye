@@ -7,7 +7,7 @@ from base import BaseHandler
 from logic.access import *
 
 
-class RegHandler(tornado.web.RequestHandler):
+class RegHandler(BaseHandler):
     def get(self):
         self.render("reg.html")
     def post(self):

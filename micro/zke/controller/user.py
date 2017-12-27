@@ -5,13 +5,13 @@ from bson import ObjectId
 
 from model.Assignment import *
 from logic.access import *
-from base import BaseHandler
+from base import AccessHandler
 from logic.access import *
 
 
 
 @needcheck()
-class UserHandler(BaseHandler):
+class UserHandler(AccessHandler):
 
     def get(self):
         #获得登陆用户自己的信息
@@ -28,8 +28,8 @@ class UserHandler(BaseHandler):
 
     def put(self):
         #修改用户信息
-        email = self.get_argument('email','')
-        nickname = self.get_argument('nickname','')
+        email = self.get_json_argument('email','')
+        nickname = self.get_json_argument('nickname','')
         kwargs={}
         if email:
             kwargs['email'] = email
@@ -40,15 +40,15 @@ class UserHandler(BaseHandler):
 
     def delete(self):
         #删除用户
-        uid = self.get_argument('uid')
+        uid = self.get_json_argument('uid')
         User.objects(id=ObjectId(uid)).delete()
         self.write(dict(status=True,msg='删除成功'))
 
-class ResetUserHandler(BaseHandler):
+class ResetUserHandler(AccessHandler):
     def put(self):
         #修改用户密码
-        password =self.get_argument('password','')
-        oldpassword =self.get_argument('oldpassword','')
+        password =self.get_json_argument('password','')
+        oldpassword =self.get_json_argument('oldpassword','')
         password =  hashlib.md5(kwargs.get('password','')).hexdigest()
         oldpassword =  hashlib.md5(kwargs.get('oldpassword','')).hexdigest()
         user = User.objects(id=self.uid,password=password).first()

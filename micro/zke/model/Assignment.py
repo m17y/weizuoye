@@ -104,6 +104,8 @@ if __name__ == '__main__':
     user = User()
     user.name='Root'
     user.profile_name = 'success'
+    import hashlib
+    user.password = hashlib.md5('111111').hexdigest()
     user.save()
 
     sc =School()

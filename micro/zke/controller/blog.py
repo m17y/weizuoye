@@ -4,13 +4,13 @@
 
 import tornado.web
 from model import Assignment as ag
-from base import BaseHandler,context
+from base import AccessHandler,context
 from logic.access import *
 
 
 
 @needcheck()
-class HomeHandler(BaseHandler):
+class HomeHandler(AccessHandler):
     # @context.check_permission("view", "article", message="can not view")
     def get(self):
         """get"""
