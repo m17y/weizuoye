@@ -19,7 +19,7 @@ class BaseHandler(tornado.web.RequestHandler):
         self.set_header("Access-Control-Allow-Headers", "x-requested-with,authorization")  # 请求头
         self.set_header("Access-Control-Allow-Methods", "POST,GET")  # 限定合法的请求方式
         self.set_header("Access-Control-Allow-Credentials", "true")  # 证书
-        self.set_header("Content-type", "application/json")  # 限定请求数据格式
+        # self.set_header("Content-type", "application/json")  # 限定请求数据格式
     def options(self, *args, **kwargs):
         self.set_header("Access-Control-Allow-Origin", self.request.headers.get("Origin", "*"))
         self.set_header("Access-Control-Allow-Headers", "*")
