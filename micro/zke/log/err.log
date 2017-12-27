@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "runserver.py", line 39, in <module>
+    main()
+  File "runserver.py", line 34, in main
+    tornado.ioloop.IOLoop.current().start()
+  File "/usr/local/lib/python2.7/dist-packages/tornado/ioloop.py", line 862, in start
+    event_pairs = self._impl.poll(poll_timeout)
+KeyboardInterrupt
+INFO:tornado.access:200 GET /login (127.0.0.1) 7.12ms
+INFO:tornado.access:200 GET /static/blog.css?v=77bad55fcaea703e6921df2cd5c35268 (127.0.0.1) 4.58ms
+WARNING:tornado.access:404 GET /favicon.ico (127.0.0.1) 49.65ms
