@@ -15,8 +15,8 @@ class UserHandler(AccessHandler):
 
     def get(self):
         #获得登陆用户自己的信息
-        data = User.objects(id=ObjectId(self.uid))
-        self.write(dict(data=data.to_json(),status=True,msg='xxx'))
+        data = User.objects(id=ObjectId(self.uid)).first()
+        self.write(dict(data=data.to_json(),status=True,name=data.profile_name,access=[]))
 
     def post(self):
         #添加用户
