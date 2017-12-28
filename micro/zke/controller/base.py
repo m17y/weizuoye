@@ -61,9 +61,10 @@ class BaseHandler(tornado.web.RequestHandler):
 class AccessHandler(BaseHandler):
 
     def prepare(self):
-        try:
-            check_access(self,paccess.keys())
-        except:
-            self.send_error(403)
-        if not self.get_secure_cookie("uid",None):
-            self.render('login.html')
+        # try:
+        #     check_access(self,paccess.keys())
+        # except:
+        #     self.send_error(403)
+        # if not self.get_secure_cookie("uid",None):
+        #     self.render('login.html')
+        pass

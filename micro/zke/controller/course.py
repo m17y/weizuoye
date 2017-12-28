@@ -14,9 +14,9 @@ class CourseHandler(AccessHandler):
     """docstring for CourseHandler"""
     def get(self):
         #获得用户课程信息
-        profile_name = self.get_json_argument('profile_name')
+        profile_name = self.get_json_argument('profile_name',self.user.profile_name)
         user = User.objects(profile_name=profile_name).first()
-        tag = self.get_json_argument('tag','')
+        tag = self.get_json_argument('tag','ain')
         if tag == 'ain':
             courses=Course.objects(owner=user.id).all()
             coursetask=CourseTask.objects(course__in=courses,is_close=False)
