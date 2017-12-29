@@ -24,7 +24,7 @@ class CourseHandler(AccessHandler):
             coursetask = json.loads(coursetask.to_json())
             for ct in coursetask:
                 ct_map.setdefault(ct['course']['$oid'],0)
-                ct_map[ct['course']['$oid']]+=len(ct['finish_user'])
+                ct_map[ct['course']['$oid']]+=len(ct['un_finish_user'])
             courses = json.loads(courses.to_json())
             for course in courses:
                 course['unfinish']=ct_map.get(course['_id']['$oid'])
@@ -45,7 +45,6 @@ class CourseHandler(AccessHandler):
         course.name = name
         course.course_type = course_type
         course.save()
-
         self.write(dict(status=True,msg='msg',course=str(course.id)))
 
     def put(self):
@@ -102,6 +101,7 @@ class CourseTaskHandler(AccessHandler):
             coursetask.course = course
             coursetask.fid = fid
             coursetask.content = content
+            coursetask.un_finish_user = course.users
             coursetask.ts = time.time()
             coursetask.save()
             result = send_course_task.apply_async(args=[self.user,course.users,coursetask])
@@ -137,17 +137,18 @@ class CrouseUser(AccessHandler):
 @needcheck()
 class CrouseTaskStatus(AccessHandler):
     def get(self):
-        import pdb; pdb.set_trace()
         #获取单个课程习题（or所有课程习题）的CrouseTaskStatus作业完成情况
         courseid = self.get_json_argument('courseid','')
         course_taskid = self.get_json_argument('course_taskid','')
         if courseid and not course_taskid:
-            course = Course.objects(id=ObjectId(courseid)).first()
-            users = course.users
-            coursetask = json.loads(CourseTask.objects(course=ObjectId(courseid)).to_json)
-            # coursetask = 
-            #TODO把未完成的放到coursetask里面，完成的把用户名字id放到里面
-            self.write(dict(users=users.to_json(),status=True))
+            course = Course.objects(id=ObjectId(courseid),owner=self.uid).first()
+            users = dict((str(u.id),u.name)for u in course.users)
+            coursetask = json.loads(CourseTask.objects(course=ObjectId(courseid)).to_json())
+            for ct in coursetask:
+                un_finish_user=ct.get('un_finish_user',[])
+                ct['un_finish_user'] = [{item['oid']:users.get(item['oid'],'')}for item in un_finish_user]
+            #TODOtask里面un_finish_user
+            self.write(dict(coursetask=coursetask,status=True))
         if course_taskid:
             #单个课程和多个一样
             pass

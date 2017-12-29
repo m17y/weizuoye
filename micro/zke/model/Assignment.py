@@ -68,7 +68,7 @@ class CourseTask(Document,BaseObject):
     course = ReferenceField(Course, reverse_delete_rule=CASCADE)
     owner = ReferenceField(User, reverse_delete_rule=CASCADE)
     content = StringField(max_length=30)
-    finish_user = ListField(ReferenceField(User,reverse_delete_rule=PULL))
+    un_finish_user = ListField(ReferenceField(User,reverse_delete_rule=PULL))
     is_close = BooleanField(default=False)
     fid = ListField()
     ts = FloatField()
@@ -129,6 +129,7 @@ if __name__ == '__main__':
     ct = CourseTask()
     ct.course = cs
     ct.owner = user
+    ct.un_finish_user = cs.users
     task = Task()
     task.course_task = ct
     task.user = user
