@@ -31,7 +31,7 @@ method:delete
 paths:/course
 consumes:application/json
 request:{
-    courseid:'xxx'(课程id)(必填),
+    _id:'xxx'(课程id)(必填),
 }
 return：{
     status:True(False),

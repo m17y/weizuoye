@@ -40,7 +40,7 @@ class Course(Document,BaseObject):
     name = StringField(max_length=30)
     description = StringField(max_length=255)
     code = StringField(max_length=30,unique=True)
-    owner = ObjectIdField()
+    owner = ReferenceField(User,reverse_delete_rule=PULL)
     users = ListField(ReferenceField(User,reverse_delete_rule=PULL))
 
 

@@ -39,11 +39,14 @@ class CourseHandler(AccessHandler):
         #添加一个课程
         code = self.get_json_argument('code')
         name = self.get_json_argument('name')
-        course_type = self.get_json_argument('course_type')
+        description = self.get_json_argument('description','')
+        course_type = self.get_json_argument('course_type',name)
         course = Course()
         course.owner = self.user
         course.name = name
         course.course_type = course_type
+        course.code = code
+        course.description = description
         course.save()
         self.write(dict(status=True,msg='msg',course=str(course.id)))
 
@@ -62,6 +65,7 @@ class CourseHandler(AccessHandler):
         #删除用户课程
         #TODO未完成
         courseid = self.get_json_argument('_id')
+        import pdb; pdb.set_trace()
         course=Course.objects(id=ObjectId(courseid)).first()
         Course.objects(id=ObjectId(courseid)).delete()
         self.write(dict(status=True,msg='del success'));return
