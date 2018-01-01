@@ -54,7 +54,7 @@ class CourseHandler(AccessHandler):
         #更新用户课程
         userid = self.uid
         course = Course()
-        kwargs = dict((k,v[-1])for k ,v in self.request.arguments.items())
+        kwargs = dict((k,v)for k ,v in self.get_json_arguments().items())
         _id = kwargs.pop('_id','')
         course.modelfactory(kwargs)
         # Course.objects(id=ObjectId(_id)).modify(**kwargs)#两个都可以
@@ -65,7 +65,6 @@ class CourseHandler(AccessHandler):
         #删除用户课程
         #TODO未完成
         courseid = self.get_json_argument('_id')
-        import pdb; pdb.set_trace()
         course=Course.objects(id=ObjectId(courseid)).first()
         Course.objects(id=ObjectId(courseid)).delete()
         self.write(dict(status=True,msg='del success'));return

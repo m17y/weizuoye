@@ -58,6 +58,12 @@ class BaseHandler(tornado.web.RequestHandler):
         except:
             return self.get_argument(name,default)
 
+    def get_json_arguments(self):
+        try:
+            return json.loads(self.request.body)
+        except:
+            raise
+
 class AccessHandler(BaseHandler):
 
     def prepare(self):
