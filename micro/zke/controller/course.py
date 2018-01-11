@@ -95,7 +95,9 @@ class CourseTaskHandler(AccessHandler):
 
     def post(self):
         #添加一个课程习题
-        if self.user['is_teacher']:
+        courseid = self.get_json_argument('_id')
+        course=Course.objects(id=ObjectId(courseid)).first()
+        if course and course.id==self.uid:
             courseid = self.get_json_argument('courseid')
             fid = self.get_json_argument('fid','').split(',')
             content = self.get_json_argument('content','')
@@ -112,6 +114,9 @@ class CourseTaskHandler(AccessHandler):
                 self.write(dict(status=True,msg='msg'));return
             else:
                 self.write(dict(status=True,msg='msg'));return
+        else:
+            self.write(dict(status=False,msg='添加失败'));return
+            
     def put(self):
         #更新课程习题
         coursetaskid = self.get_json_argument('coursetaskid')
@@ -142,6 +147,7 @@ class CrouseTaskStatus(AccessHandler):
     def get(self):
         #获取单个课程习题（or所有课程习题）的CrouseTaskStatus作业完成情况
         courseid = self.get_json_argument('courseid','')
+        print courseid
         course_taskid = self.get_json_argument('course_taskid','')
         if courseid and not course_taskid:
             course = Course.objects(id=ObjectId(courseid),owner=self.uid).first()
@@ -151,8 +157,11 @@ class CrouseTaskStatus(AccessHandler):
                 un_finish_user=ct.get('un_finish_user',[])
                 ct['un_finish_user'] = [{item['oid']:users.get(item['oid'],'')}for item in un_finish_user]
             #TODOtask里面un_finish_user
-            self.write(dict(coursetask=coursetask,status=True))
+            self.write(dict(coursetask=coursetask,status=True));return
         if course_taskid:
             #单个课程和多个一样
             pass
+        else:
+            self.write(dict(coursetask=[],status=True))
+        
 
