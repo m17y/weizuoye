@@ -95,9 +95,10 @@ class CourseTaskHandler(AccessHandler):
 
     def post(self):
         #添加一个课程习题
-        courseid = self.get_json_argument('_id')
+        courseid = self.get_json_argument('courseid')
         course=Course.objects(id=ObjectId(courseid)).first()
-        if course and course.id==self.uid:
+        # import pdb; pdb.set_trace()
+        if course and course.owner == self.user:
             courseid = self.get_json_argument('courseid')
             fid = self.get_json_argument('fid','').split(',')
             content = self.get_json_argument('content','')

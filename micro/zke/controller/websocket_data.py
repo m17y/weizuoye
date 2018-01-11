@@ -1,11 +1,11 @@
 # -*- coding:utf-8 -*-
 import json
-from base import BaseHandler
+from base import BaseHandler,BaseSocketHandler
 from logic.access import *
 
 
 
-@url(r"/websocket/real_time_monitor")
+# @url(r"/websocket/real_time_monitor")
 class WebsocketRealTimeMonitorHandler(BaseSocketHandler):
     """监控面板实时推送"""
     def on_message(self, msg):

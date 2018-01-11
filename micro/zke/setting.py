@@ -13,4 +13,4 @@ define("mysql_password", default="blog", help="blog database password")
 APP_KEY = '6c1657164a468894953ac402'
 MASTER_SECRET = '78e4680b4847429144301c0d'
 REDIS_HOST = '127.0.0.1:6379'
-PUBSUB_CHANNEL = set('base_channel','WINDPOWER-PUBSUB-CHANNEL')
+PUBSUB_CHANNEL = set(['base_channel','WINDPOWER-PUBSUB-CHANNEL'])
