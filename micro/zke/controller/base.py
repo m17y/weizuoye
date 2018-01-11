@@ -1,12 +1,18 @@
 #-*- coding:utf-8 -*-
 import tornado
 import json
+import tornado.websocket
+import tornadoredis
 from bson import ObjectId
 from logic.access import context
 from logic.access import *
 from model.Assignment import *
+from setting import *
 
 class BaseHandler(tornado.web.RequestHandler):
+
+    _USER_ID = '_USER_ID'
+
     role = property(lambda self: self.get_user_role())
     uid = property(lambda self: self.get_secure_cookie("uid"))
     user = property(lambda self: self.get_user())
@@ -74,3 +80,51 @@ class AccessHandler(BaseHandler):
         # if not self.get_secure_cookie("uid",None):
         #     self.render('login.html')
         pass
+
+class BaseSocketHandler(BaseHandler, tornado.websocket.WebSocketHandler):
+    uid = property(lambda self: self.get_secure_cookie(self._USER_ID))
+    waiters = set()
+    waiters_filter = dict()
+    uids = dict()
+    def __init__(self, *args, **kwargs):
+        tornado.websocket.WebSocketHandler.__init__(self,*args, **kwargs)
+
+    def open(self, *args, **kwargs):
+        if not self.uid:
+            self.close(10152,'not login')
+            return
+
+        BaseSocketHandler.waiters.add(self)
+        BaseSocketHandler.waiters_filter[self] = set()
+        self.listen()
+
+    def on_close(self):
+        BaseSocketHandler.waiters.remove(self)
+        BaseSocketHandler.waiters_filter.pop(self, None)
+        BaseSocketHandler.uids.pop(self, None)
+
+        if not BaseSocketHandler.waiters and hasattr(BaseSocketHandler,'client'):
+            BaseSocketHandler.client.disconnect()
+            delattr(BaseSocketHandler, 'client')
+
+    @tornado.gen.engine
+    def listen(self):
+        if hasattr(BaseSocketHandler,'client'):
+            return
+        host = REDIS_HOST
+        h, p = host.split(":") if ":" in host else (host, 6379)
+        BaseSocketHandler.client = tornadoredis.Client(host=h, port=int(p))
+        BaseSocketHandler.client.connect()
+        yield tornado.gen.Task(BaseSocketHandler.client.subscribe,PUBSUB_CHANNEL)
+        BaseSocketHandler.client.listen(self.on_msg)
+
+    def on_msg(self,msg):
+        if msg.kind == 'subscribe':
+            return
+
+        if msg.kind =='message':
+            for waiter in BaseSocketHandler.waiters:
+                waiter.on_message(msg.body)
+
+        if msg.kind == 'disconnect' and hasattr(BaseSocketHandler,'client'):
+            delattr(BaseSocketHandler, 'client')
