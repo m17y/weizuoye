@@ -20,7 +20,7 @@ class LoginHandler(BaseHandler):
         password  =  hashlib.md5(password).hexdigest()
         user = User.objects(name=name,password=password).first()
         if user:
-            self.set_secure_cookie("uid",str(user.id))
+            self.set_secure_cookie(self._USER_ID,str(user.id))
             status,msg = True,'successs'
         else:
             status,msg = False,'fail'
