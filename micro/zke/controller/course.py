@@ -8,7 +8,7 @@ from model.Assignment import *
 from logic.access import *
 from base import AccessHandler
 from logic.access import *
-from tasks.task_server import *
+import task_server
 # @needcheck()
 class CourseHandler(AccessHandler):
     """docstring for CourseHandler"""
@@ -97,20 +97,20 @@ class CourseTaskHandler(AccessHandler):
         #添加一个课程习题
         courseid = self.get_json_argument('courseid')
         course=Course.objects(id=ObjectId(courseid)).first()
-        # import pdb; pdb.set_trace()
         if course and course.owner == self.user:
             courseid = self.get_json_argument('courseid')
             fid = self.get_json_argument('fid','').split(',')
             content = self.get_json_argument('content','')
             course = Course.objects(id=ObjectId(courseid)).first()
             coursetask = CourseTask()
+            coursetask.owner = self.user
             coursetask.course = course
             coursetask.fid = fid
             coursetask.content = content
             coursetask.un_finish_user = course.users
             coursetask.ts = time.time()
             coursetask.save()
-            result = send_course_task.apply_async(args=[self.user,course.users,coursetask])
+            result = task_server.send_course_task.apply_async(args=[self.user.to_json(),course.users,coursetask.to_json()])
             if result == 'SUCCESS':
                 self.write(dict(status=True,msg='msg'));return
             else:
@@ -147,13 +147,15 @@ class CrouseUser(AccessHandler):
 class CrouseTaskStatus(AccessHandler):
     def get(self):
         #获取单个课程习题（or所有课程习题）的CrouseTaskStatus作业完成情况
-        courseid = self.get_json_argument('courseid','')
-        print courseid
+        courseids = self.get_json_argument('courseid','')
+        if not courseids: self.write(dict(coursetask=[],status=True));return
+        courseids = map(ObjectId, courseids.split(','))
+        print 'courseid',courseids
         course_taskid = self.get_json_argument('course_taskid','')
-        if courseid and not course_taskid:
-            course = Course.objects(id=ObjectId(courseid),owner=self.uid).first()
+        if courseids and not course_taskid:
+            course = Course.objects(id__in=courseids,owner=self.uid).first()
             users = dict((str(u.id),u.name)for u in course.users)
-            coursetask = json.loads(CourseTask.objects(course=ObjectId(courseid)).to_json())
+            coursetask = json.loads(CourseTask.objects(course__in=courseids).to_json())
             for ct in coursetask:
                 un_finish_user=ct.get('un_finish_user',[])
                 ct['un_finish_user'] = [{item['oid']:users.get(item['oid'],'')}for item in un_finish_user]
