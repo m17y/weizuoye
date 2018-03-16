@@ -6,6 +6,25 @@ redis-cli
 kwargs = dict((k,v[-1])for k ,v in self.request.arguments.items())
 
 #supervisor
+conf 文件在 /etc/supervisor/conf.d
+简单配置如下
+
+`
+[program:weizuoye]
+command=python runserver.py
+autorestart=True
+autostart=True
+directory=/home/suyf/workspace/git/weizuoye/micro/zke
+user=suyf
+startretries=3
+autorestart=unexpected
+exitcodes=0,2
+stopsignal=INT
+stderr_logfile=/home/suyf/workspace/git/weizuoye/micro/zke/log/err.log
+stdout_logfile=/home/suyf/workspace/git/weizuoye/micro/zke/log/out.log
+[supervisord]
+`
+
 #重新启动进程之前必须运行此命令
 unlink /tmp/supervisor.sock
 #启动supervisor进程
